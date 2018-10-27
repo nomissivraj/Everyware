@@ -4,17 +4,20 @@ var MQTT_TOPIC = "testtopic"; //MQTT topis is test
 var MQTT_ADDR = "mqtt://broker.i-dat.org:80"; //Use the broker address here
 var MQTT_PORT = 80; //And broker's port
 
+//dependencies for general nodejs server routing etc...
 var express = require('express');
 var app = express();
 var http = require('http').Server(app);
-var cfenv = require("cfenv");
 
+//Dependencies for personality insights
+var cfenv = require("cfenv");
 var appEnv = cfenv.getAppEnv();
+var PersonalityInsightsV2 = require('watson-developer-cloud/personality-insights/v2');
 
 http.listen(appEnv.port, appEnv.bind);
 
-var PersonalityInsightsV2 = require('watson-developer-cloud/personality-insights/v2');
 
+//Personality insigts api credentials
 var personality_insights = new PersonalityInsightsV2({
     username: '146b59de-39c1-45ab-9d19-2b6dcd199cd7',
     password: 'akCmGK1Uy6Mk'
@@ -30,7 +33,6 @@ client.on('connect', function () { //connect the MQTT client
     client.subscribe(MQTT_TOPIC, {
         qos: 2
     }); //Subscribe to the topic
-
 
 });
 
