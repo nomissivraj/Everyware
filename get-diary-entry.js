@@ -20,6 +20,5 @@ client.on('connect', function () { //connect the MQTT client
 });
 
 client.on('message', function (MQTT_TOPIC, message) {
-    console.log(message.toString());
-    personalityInsight.AnalysePersonality(message.toString());
+    personalityInsight.AnalysePersonality(message.toString()); //send json object recieved to personality-insight.js to analysis
 });
