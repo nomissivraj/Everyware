@@ -24,6 +24,11 @@ client.on('message', (MQTT_TOPIC, message) => {
     personalityInsight.AnalysePersonality(message.toString()); //send json object recieved to personality-insight.js to analysis
 });
 
+//Front End
+const hbs = require('express-handlebars'); // require handlebars
+app.engine('hbs', hbs({extname: 'hbs', defaultLayout: 'layout', layoutsDir: __dirname + '/www/layouts/'})); //register engine
+app.set('view engine', 'hbs'); // setting view engine to handlebars
+
 //Set up routes for front end
 app.listen(WEB_PORT, () => {
     console.log(`App Listening on Port: ${WEB_PORT}`); 
