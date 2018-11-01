@@ -26,7 +26,7 @@ client.on('message', (MQTT_TOPIC, message) => {
 
 //Front End
 const hbs = require('express-handlebars'); // require handlebars
-app.engine('hbs', hbs({extname: 'hbs', defaultLayout: 'layout', layoutsDir: __dirname + '/www/layouts/'})); //register engine
+app.engine('hbs', hbs({extname: 'hbs', defaultLayout: 'layout.hbs', layoutsDir: __dirname + '/views/layout/'})); //register engine
 app.set('view engine', 'hbs'); // setting view engine to handlebars
 
 //Set up routes for front end
@@ -34,14 +34,14 @@ app.listen(WEB_PORT, () => {
     console.log(`App Listening on Port: ${WEB_PORT}`); 
  });
 
-app.get('/', (req, res) => {
-    res.sendFile(__dirname + '/www/index.html');
+app.get('/', (req, res, next) => {
+    res.render('index', { title: 'Main page', condition: false});
 });
 
 app.get('/profile', (req, res) => {
-    res.sendFile(__dirname + '/www/profile.html');
+    res.render('profile', { title: 'Profile page', condition: false});
 });
 
 app.get('*', (req, res) => {
-    res.sendFile(__dirname + '/www/404.html');
+    res.render('404', { title: '404 Page not found!', condition: false});
 });
