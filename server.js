@@ -1,9 +1,12 @@
 //MQTT Dependencies
 const mqtt = require('mqtt')
 const MQTT_TOPIC = "diaryentry"; //MQTT topic is test
-const MQTT_ADDR = "mqtt://broker.i-dat.org:80"; //Use the broker address here
-const MQTT_PORT = 80; //And broker's port
+//const MQTT_ADDR = "mqtt://broker.i-dat.org:80"; //Use the broker address here
+//const MQTT_PORT = 80; //And broker's port
 const WEB_PORT = 4000;
+var credentials = {port: 17816, username: "fowwpooq", password: "U-cF38BXV7A0"};
+const client = mqtt.connect('mqtt://m20.cloudmqtt.com', credentials);
+
 
 //dependencies for general nodejs server routing etc...
 const express = require('express');
@@ -12,7 +15,7 @@ const http = require('http').Server(app);
 
 const personalityInsight = require('./personality-insight.js');
 
-const client = mqtt.connect(MQTT_ADDR); //Create a new connection (use the MQTT adress)
+//const client = mqtt.connect(MQTT_ADDR); //Create a new connection (use the MQTT adress)
 
 client.on('connect', () => { //connect the MQTT client
     client.subscribe(MQTT_TOPIC, {
