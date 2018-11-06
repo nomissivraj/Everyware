@@ -29,8 +29,22 @@ client.on('message', (MQTT_TOPIC, message) => {
 
 //Front End
 const hbs = require('express-handlebars'); // require handlebars
-app.engine('hbs', hbs({extname: 'hbs', defaultLayout: 'layout.hbs', layoutsDir: __dirname + '/views/layout/'})); //register engine
+app.engine('hbs', hbs({
+    helpers: {
+        equals: (a, b, options) => {
+            return a === b ? options.fn(this) : options.inverse(this);
+        },
+        toLowerCase: (str) => {
+            return str.toLowerCase();
+        },
+    },
+    extname: 'hbs',
+    defaultLayout: 'layout.hbs',
+    layoutsDir: __dirname + '/views/layout/'
+})); //register engine
 app.set('view engine', 'hbs'); // setting view engine to handlebars
+const path = require('path');
+app.use(express.static(path.join(__dirname, '/public')));
 
 //Set up routes for front end
 app.listen(WEB_PORT, () => {
@@ -38,11 +52,19 @@ app.listen(WEB_PORT, () => {
  });
 
 app.get('/', (req, res, next) => {
-    res.render('index', { title: 'Main page', condition: false});
+    res.render('index', { title: 'Home', condition: false});
 });
 
 app.get('/profile', (req, res) => {
-    res.render('profile', { title: 'Profile page', condition: false});
+    res.render('profile', { title: 'Profile', condition: false});
+});
+
+app.get('/history', (req, res) => {
+    res.render('profile', { title: 'History', condition: false});
+});
+
+app.get('/about', (req, res) => {
+    res.render('profile', { title: 'About', condition: false});
 });
 
 app.get('*', (req, res) => {
