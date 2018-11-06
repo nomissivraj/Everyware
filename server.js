@@ -60,11 +60,11 @@ app.get('/profile', (req, res) => {
 });
 
 app.get('/history', (req, res) => {
-    res.render('profile', { title: 'History', condition: false});
+    res.render('history', { title: 'History', condition: false});
 });
 
 app.get('/about', (req, res) => {
-    res.render('profile', { title: 'About', condition: false});
+    res.render('about', { title: 'About', condition: false});
 });
 
 app.get('*', (req, res) => {
