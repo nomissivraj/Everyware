@@ -4,10 +4,35 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>{{ title }}</title>
-    <link rel="stylesheet" href="/www/css/styles.css">
+    <link rel="stylesheet" type="text/css" href="/css/styles.css" />
+    <!--{{#each css}}
+
+        <link rel="stylesheet" href="/css/{{this}}">
+    {{/each}}-->
+    <title>{{title}}</title>
 </head>
-<body>
-    {{{ body }}}
+<body class="{{#toLowerCase title}}{{/toLowerCase}}">
+ 
+    <header>
+        <div class="logo">
+            <img class="logo_image" alt="" src="/img/logo.png"/>
+        </div>
+        <nav role="navigation">
+            <ul>
+                <li {{#equals "Home" title}}class="active"{{/equals}}><a href="/">Home</a></li>
+                <li {{#equals "Profile" title}}class="active"{{/equals}}><a href="/profile">Profile</a></li>
+                <li {{#equals "History" title}}class="active"{{/equals}}><a href="/history">History</a></li>
+                <li {{#equals "About" title}}class="active"{{/equals}}><a href="/about">About</a></li>
+            </ul>
+        </nav>
+    </header>
+    
+    <div class="main">
+        {{{ body }}}
+    </div>
+    
+    <footer>
+        Copyright Sensum Diary
+    </footer>
 </body>
 </html>
