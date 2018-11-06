@@ -1,0 +1,134 @@
+
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed, 
+figure, figcaption, footer, header, hgroup, 
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font-size: 100%;
+	font: inherit;
+	vertical-align: baseline;
+}
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure, 
+footer, header, hgroup, menu, nav, section {
+	display: block;
+}
+body {
+	line-height: 1;
+}
+ol, ul {
+	list-style: none;
+}
+blockquote, q {
+	quotes: none;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+	content: '';
+	content: none;
+}
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+/* END CSS RESET */
+
+/*
+Table of Contents:
+    -Core Styles
+    -Header
+        -Navigation
+    -Main Page
+    -Footer 
+
+*/
+
+/* CORE */
+html {
+    height: 100%;
+}
+
+body {
+    background: -webkit-radial-gradient(center, #f7f7f7 -0%, #e9e9e9 70%);
+    background: -moz-radial-gradient(center, #f7f7f7 -0%, #e9e9e9 70%);
+    background: -o-radial-gradient(center, #f7f7f7 -0%, #e9e9e9 70%);
+    background: radial-gradient(center, #f7f7f7 -0%, #e9e9e9 70%);
+    background-repeat:no-repeat;
+    height: 100%;
+}
+
+h1 {
+    color: #444;
+    font-size: 2em;
+    padding: 0 0 20px 0;
+}
+
+.container {
+    padding:20px;
+    width: 100%;
+}
+
+/* Header */
+header {
+    position: fixed;
+    top: 0px;
+    border-right: 3px solid #dadada;
+    height: 100%;
+    width: 80px;
+}
+
+header.logo {
+    max-width: 80px;
+    max-height: 80px;
+}
+
+    /* Header / Navigation */
+    nav ul {
+        list-style: none;
+        text-align: center;
+    }
+
+    nav ul li {
+    }
+
+    nav .active a {
+        background: #dadada;
+    }
+
+
+    nav a {
+        text-decoration: none;
+        padding: 20px 0;
+        display: block;
+    }
+
+    nav .active {
+        font-weight: bold;
+    }
+
+/* Main Page */
+.main {
+    margin: 40px 0 20px 83px;
+    padding: 20px;
+}
+
+/* Footer */
+footer {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    padding: 10px;
+    text-align: center;
+    margin-left: 83px;
+}
