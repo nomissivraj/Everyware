@@ -78,9 +78,7 @@ if (numWords > 100) { // If word count exceeds minimum required for personality 
                 console.log(name);
                 console.log(percentage);
                 test[i] = {[name]: percentage} //Need to remove spaces to avoid 'emotional range' becoming string
-                //test.push({
-                //    [name]: percentage
-                //});
+                
             }
             console.log(test);
 
