@@ -66,12 +66,17 @@ body {
     background: radial-gradient(center, #f7f7f7 -0%, #e9e9e9 70%);
     background-repeat:no-repeat;
     height: 100%;
+    font-family: Arial, Helvetica, sans-serif;
+}
+a {
+    color: #fff;
 }
 
 h1 {
     color: #444;
     font-size: 2em;
     padding: 0 0 20px 0;
+    text-transform: uppercase;
 }
 
 .container {
@@ -88,6 +93,7 @@ header {
     width: 80px;
     transition: all .4s ease;
     background: rgba(0, 0, 0, 0.4);
+    overflow: hidden;
 }
 
 header:hover {
@@ -100,7 +106,7 @@ header .logo {
     width: 100%;
 }
 
-header.logo_image {
+header.logo__image {
     max-width: 80px;
     max-height: 80px;
 }
@@ -108,21 +114,51 @@ header.logo_image {
     /* Header / Navigation */
     nav ul {
         list-style: none;
-        text-align: center;
+    }
+    
+    nav a {
+        position: relative;
+        text-decoration: none;
+        padding: 20px 0 20px 20px;
+        display: block;
+        text-transform: uppercase;
+        max-height: 40px;
+        width: 180px;
     }
 
-    nav ul li {
+    nav a:hover, nav a:focus {
+        background: rgba(150,150,150,.8);
+    }
+
+    nav a:active {
+        background: #dadada;
+        color: #444;
     }
 
     nav .active a {
         background: #dadada;
+        color: #444;
     }
 
+    .navlink__text {
+        display: inline-block;
+        opacity: 0;
+        padding-left: 15px;
+        transition: opacity .4s ease;
+        vertical-align: middle;
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+    }
 
-    nav a {
-        text-decoration: none;
-        padding: 20px 0;
-        display: block;
+    header.header--open  .navlink__text {
+        opacity: 1;
+    }
+
+    nav .navlink__icon {
+        width: 40px;
+        height: 40px;
+        display: inline-block;
     }
 
     nav .active {
