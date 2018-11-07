@@ -86,9 +86,21 @@ header {
     border-right: 3px solid #dadada;
     height: 100%;
     width: 80px;
+    transition: all .4s ease;
+    background: rgba(0, 0, 0, 0.4);
 }
 
-header.logo {
+header:hover {
+    width: 200px;
+    background: rgba(0, 0, 0, 0.8);
+}
+
+header .logo {
+    text-align: center;
+    width: 100%;
+}
+
+header.logo_image {
     max-width: 80px;
     max-height: 80px;
 }
@@ -119,8 +131,9 @@ header.logo {
 
 /* Main Page */
 .main {
-    margin: 40px 0 20px 83px;
-    padding: 20px;
+    margin: 0 0 20px 83px;
+    padding: 40px 20px 20px 20px;
+    transition: margin .4s ease;
 }
 
 /* Footer */
