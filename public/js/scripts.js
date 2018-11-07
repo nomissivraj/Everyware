@@ -7,8 +7,10 @@ function menuAnimation() {
     
     menu.addEventListener('mouseover', () => {
         page.style.marginLeft = curLeftMargin + 117 + "px";
+        menu.classList.add('header--open');
     });
     menu.addEventListener('mouseout', () => {
         page.style.marginLeft = curLeftMargin + "px";
+        menu.classList.remove('header--open');
     });
 }
