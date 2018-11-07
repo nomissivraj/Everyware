@@ -28,6 +28,7 @@ client.on('message', (MQTT_TOPIC, message) => {
 });
 
 //Front End
+const getMongoD = require("./getMongoD");
 const hbs = require('express-handlebars'); // require handlebars
 app.engine('hbs', hbs({
     helpers: {
@@ -41,11 +42,14 @@ app.engine('hbs', hbs({
     extname: 'hbs',
     defaultLayout: 'layout.hbs',
     layoutsDir: __dirname + '/views/layout/'
-})); //register engine
+})); //register engine and helpers
+
 app.set('view engine', 'hbs'); // setting view engine to handlebars
 const path = require('path');
 app.use(express.static(path.join(__dirname, '/public')));
 
+
+//var lastEntry = getMongoD.getLastEntry('dat602',"Personality");
 //Set up routes for front end
 app.listen(WEB_PORT, () => {
     console.log(`App Listening on Port: ${WEB_PORT}`); 
@@ -56,7 +60,11 @@ app.get('/', (req, res, next) => {
 });
 
 app.get('/profile', (req, res) => {
-    res.render('profile', { title: 'Profile', condition: false});
+    //refering to the function in getMongoD.js - use promise to retrive recent data only when promise is fullfilled
+    //Only when promise is fulfulled will the page render happen. MIGHT NEED TO TEST WHAT HAPPENS IF NO DATA EXISTS?
+    getMongoD.getLastEntry('dat602', 'Personality').then((recentData) => {
+        res.render('profile', { title: 'Profile', condition: false, recentData});
+    });
 });
 
 app.get('/history', (req, res) => {
