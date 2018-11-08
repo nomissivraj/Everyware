@@ -17,8 +17,7 @@ exports.PushtoMongo = function(colName, data){
         if (err) throw err; //throw error if can't connect
         
         var dbo = db.db('dat602');
-        data.timestamp = timeStamp(); //add timestamp to the end of data object to be pushed to DB
-        
+                
         dbo.collection(colName).insertOne(data, (err, res) => { //add document to collection using the passed in collection name
             if (err) throw err;
             console.log('1 Document inserted');
@@ -28,9 +27,3 @@ exports.PushtoMongo = function(colName, data){
 
 }
 
-function timeStamp() {
-    var date = new Date().toLocaleDateString();
-    var time = new Date().toLocaleTimeString();
-    var timeStamp = date + " " + time;
-    return timeStamp;
-}

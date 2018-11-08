@@ -10,9 +10,9 @@ var personalityInsights = new PersonalityInsightsV3({
     url: 'https://gateway.watsonplatform.net/personality-insights/api'
 });
 
-var mongoDB = require('./mongoDB.js'); //enable access to pushtomongo function
+var mongoDB = require('./push-mongo-DB.js'); //enable access to pushtomongo function
 
-exports.AnalysePersonality = function(entry) {
+exports.AnalysePersonality = function(entry, timeStamp) {
     var profileParams = {
         //get diary entry from passed value
         content: entry,
@@ -31,6 +31,8 @@ exports.AnalysePersonality = function(entry) {
                 var score = Math.round(profile.personality[i].percentile * 100); //store rounded percentage value in score variable
                 filteredProfile[name] = score; //add the key/value pair to the filtered profile object using the stored name and score
             }
+
+            filteredProfile.timestamp = timeStamp; //add timestamp to end of DB entry
             
             mongoDB.PushtoMongo("Personality", filteredProfile); //pass the collection name and filteredProfile object to mongoDB.js to add to DB
           
