@@ -1,0 +1,16 @@
+{
+  "name": "diarystuff",
+  "version": "1.0.0",
+  "description": "diary",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.16.4",
+    "mqtt": "^2.18.8",
+    "p5": "^0.7.2"
+  }
+}
