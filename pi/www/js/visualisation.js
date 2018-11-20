@@ -11,6 +11,9 @@ var neuroticismRate;
 
 var rateMultiplier = 10;
 
+var outlineColour;
+
+
 
 function preload(){
     var persUrl = 'https://api.mlab.com/api/1/databases/dat602/collections/Personality?apiKey=zQ7SEYq_OxfzvDkJvF_DRW2HIPhPFv9i';
@@ -31,6 +34,15 @@ function persParse(data){
 
 function toneParse(data){
     toneData = data[data.length - 1];
+    
+    //FEAR BLACK/ Dark greayrt
+    //anger red fuck
+    //joy yellow
+    //sadness some kind of blue
+    //anal light grey maybe
+    // confident purp
+    //tentative pale turquoise
+    
 
 }
 
@@ -38,37 +50,38 @@ function toneParse(data){
 function setup() {
     createCanvas(window.innerWidth, window.innerHeight);
     frameRate(30);
-    
+    outlineColour = color(255, 255, 255, 255);
     
 
 }
 
 function draw() {
-    background(255);
+    background(200);
     for(var i = 0; i < drops.length; i++){
-        drops[i].show();
         drops[i].grow(i);
+        drops[i].show();
+
         
     }
 
     if(frameCount % opennessRate == 0){
-        var c = color(79, 146, 214, 255);
+        var c = color(154, 196, 248, 255);
         drops.push(new Drop(c));
     }
     if(frameCount % conscientiousnessRate == 0){
-        var c = color(79, 214, 110, 255);
+        var c = color(255, 253, 130, 255);
         drops.push(new Drop(c));
     }
     if(frameCount % extraversionRate == 0){
-        var c = color(198, 206, 86, 255);
+        var c = color(250, 131, 52, 255);
         drops.push(new Drop(c));
     }
     if(frameCount % agreeablenessRate == 0){
-        var c = color(216, 60, 198, 255);
+        var c = color(207, 255, 179, 255);
         drops.push(new Drop(c));
     }
     if(frameCount % neuroticismRate == 0){
-        var c = color(232, 62, 0, 255);
+        var c = color(221, 115, 115, 255);
         drops.push(new Drop(c));
     }
 
@@ -85,7 +98,6 @@ function Drop(color) {
     this.y = random(height);
     this.w = 10;
     this.alpha = 1;
-    
 
     this.grow = function(index) {
         this.w += 10;
@@ -93,7 +105,7 @@ function Drop(color) {
         
        
         
-        if(this.alpha == 0){
+        if(this.alpha < 0){
             drops.splice(index, 1);
         }
     }
@@ -104,8 +116,10 @@ function Drop(color) {
         
         strokeWeight(2);
         color._array[3] = this.alpha;
-        noFill();
-        stroke(color);
+        outlineColour._array[3] = this.alpha;
+        stroke(outlineColour);
+        
+        fill(color);
         ellipse(this.x, this.y, this.w);
         pop();
     }
