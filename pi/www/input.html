@@ -7,8 +7,16 @@
     <title>Input</title>
 </head>
 <body>
-    <h1>Input page</h1>
-    <p>This is where the input page/recording etc will happen</p>
-    
+
+<script src="/js/socket.io.js"></script>
+    <script>
+        var socket = io.connect('http://localhost:5000');
+        socket.on('bookOpen', (state) => {
+            console.log('book is open');
+		if (state === false) {
+			window.location.replace("/");
+		}
+        });
+    </script>    
 </body>
 </html>
