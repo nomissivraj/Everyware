@@ -32,6 +32,17 @@ io.on("connection", (socket) => {
 		socket.emit("bookOpen", state);
 	}, 1000);
     //Send book status to client every second - where it will be checked and page changed accordingly.
+    socket.on('startRecord', (data) => {
+        micState = data;
+    });
+
+    socket.on('stopRecord', (data) => {
+        micState = data;
+    });
+
+    socket.on('saveEntry', (data) => {
+        console.log("this is when it would save the file and do speech to text");
+    });
 });
 
 //Switch statement to handle recording based on state of book open/closed/stopped etc.
