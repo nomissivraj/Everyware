@@ -9,9 +9,9 @@
 <body>
     <h1>Input Page</h1>
     <p>This is where the diary entry input/recording will happen</p>
-    <button onclick="startRecord">Start</button>
-    <button onclick="stopRecord">Stop</button>
-    <button onClick="save">Done/submit</button>
+    <button onclick="startRecord()">Start</button>
+    <button onclick="stopRecord()">Stop</button>
+    <button onClick="save()">Done/submit</button>
 
 <script src="/js/socket.io.js"></script>
     <script>
@@ -24,13 +24,13 @@
         });
 
         function startRecord() {
-            io.emit('startRecord', "record"); 
+            socket.emit('startRecord', "record"); 
         }
         function stopRecord() {
-            io.emit('stopRecord', "stop"); 
+            socket.emit('stopRecord', "stopped"); 
         }
         function save() {
-            io.emit('saveEntry', true);
+            socket.emit('saveEntry', true);
         }
 
     </script>    
