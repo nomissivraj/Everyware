@@ -12,7 +12,6 @@
     "express-handlebars": "^3.0.0",
     "http": "0.0.0",
     "mongodb": "^3.1.8",
-    "mqtt": "^2.15.3",
     "path": "^0.12.7",
     "utf-8-validate": "4.0.0",
     "watson-developer-cloud": "^3.13.0",

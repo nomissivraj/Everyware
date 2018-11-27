@@ -10,11 +10,13 @@
   "license": "ISC",
   "dependencies": {
     "express": "^4.16.4",
+    "mongodb": "^3.1.10",
     "mqtt": "^2.18.8",
     "node-record-lpcm16": "^0.3.1",
     "opn": "^5.4.0",
     "p5": "^0.7.2",
     "serialport": "^7.0.2",
-    "socket.io": "^2.1.1"
+    "socket.io": "^2.1.1",
+    "watson-developer-cloud": "^3.13.0"
   }
 }
