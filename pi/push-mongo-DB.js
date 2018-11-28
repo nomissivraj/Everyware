@@ -20,7 +20,7 @@ exports.PushtoMongo = function(colName, data){
                 
         dbo.collection(colName).insertOne(data, (err, res) => { //add document to collection using the passed in collection name
             if (err) throw err;
-            console.log('1 Document inserted');
+            console.log('1 Document inserted into ' + colName);
             db.close;
         });   
     });

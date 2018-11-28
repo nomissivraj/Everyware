@@ -9,9 +9,10 @@ var extraversionRate;
 var agreeablenessRate;
 var neuroticismRate;
 
-var rateMultiplier = 10;
+var rateMultiplier = 5;
 
 var outlineColour;
+var bgColour;
 
 
 
@@ -24,24 +25,42 @@ function preload(){
 
 function persParse(data){
     persData = data[data.length - 1];
-    opennessRate = 60 + ((100 - persData.big5_openness) * rateMultiplier);
-    conscientiousnessRate = 60 + ((100 - persData.big5_conscientiousness) * rateMultiplier);
-    extraversionRate = 60 + ((100 - persData.big5_extraversion) * rateMultiplier);
-    agreeablenessRate = 60 + ((100 - persData.big5_agreeableness) * rateMultiplier);
-    neuroticismRate = 60 + ((100 - persData.big5_neuroticism) * rateMultiplier);
+    opennessRate = 30 + ((100 - persData.big5_openness) * rateMultiplier);
+    conscientiousnessRate = 30 + ((100 - persData.big5_conscientiousness) * rateMultiplier);
+    extraversionRate = 30 + ((100 - persData.big5_extraversion) * rateMultiplier);
+    agreeablenessRate = 30 + ((100 - persData.big5_agreeableness) * rateMultiplier);
+    neuroticismRate = 30  + ((100 - persData.big5_neuroticism) * rateMultiplier);
 
 }
 
 function toneParse(data){
     toneData = data[data.length - 1];
+    delete toneData.timestamp;
     
-    //FEAR BLACK/ Dark greayrt
-    //anger red fuck
-    //joy yellow
-    //sadness some kind of blue
-    //anal light grey maybe
-    // confident purp
-    //tentative pale turquoise
+    console.log(toneData);
+    var highest = Object.keys(toneData).reduce(function(a, b){ return toneData[a] > toneData[b] ? a : b });
+    
+    if(highest == "fear"){
+        bgColour = color(107, 96, 84);
+    } 
+    else if(highest == "anger"){
+        bgColour = color(211, 78, 36);
+    }
+    else if(highest == "joy"){
+        bgColour = color(255, 238, 147);
+    }
+    else if(highest == "sadness"){
+        bgColour = color(35, 57, 91);
+    }
+    else if(highest == "analytical"){
+        bgColour = color(170, 171, 188);
+    }
+    else if(highest == "confident"){
+        bgColour = color(74, 49, 77);
+    }
+    else if(highest == "tentative"){
+        bgColour = color(194, 239, 235);
+    }
     
 
 }
@@ -56,10 +75,10 @@ function setup() {
 }
 
 function draw() {
-    background(200);
+    background(bgColour); 
     for(var i = 0; i < drops.length; i++){
         drops[i].grow(i);
-        drops[i].show();
+        drops[i].show(i);
 
         
     }
@@ -84,11 +103,9 @@ function draw() {
         var c = color(221, 115, 115, 255);
         drops.push(new Drop(c));
     }
+    
+    
 
-}
-
-function mouseClicked(){
-    drops.push(new Drop(color(0, 0, 0, 0)));
 }
 
 
@@ -102,15 +119,9 @@ function Drop(color) {
     this.grow = function(index) {
         this.w += 10;
         this.alpha -= 0.01;
-        
-       
-        
-        if(this.alpha < 0){
-            drops.splice(index, 1);
-        }
     }
 
-    this.show = function() {
+    this.show = function(index) {
         push();
         
         
@@ -122,5 +133,8 @@ function Drop(color) {
         fill(color);
         ellipse(this.x, this.y, this.w);
         pop();
+        if(this.w >= width * 3){
+            drops.splice(index, 1);
+        }
     }
 }
