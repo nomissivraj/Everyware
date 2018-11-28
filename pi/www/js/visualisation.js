@@ -60,6 +60,9 @@ function toneParse(data){
     }
     else if(highest == "tentative"){
         bgColour = color(194, 239, 235);
+    } 
+    else {
+        bgColour = color(255);
     }
     
 
