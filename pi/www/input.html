@@ -4,14 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="/css/style.css">
     <title>Input</title>
 </head>
 <body>
     <h1>Input Page</h1>
     <p>This is where the diary entry input/recording will happen</p>
-    <button onclick="startRecord()">Start</button>
-    <button onclick="stopRecord()">Stop</button>
-    <button onClick="save()">Done/submit</button>
+    <div id="transcript">
+    </div>
+    <button id="startBtn" onclick="startRecord(this)">Start</button>
+    <button id="stopBtn" onclick="stopRecord(this)">Stop</button>
+    <button id="submitBtn" onClick="save(this)">Done/submit</button>
 
 <script src="/js/socket.io.js"></script>
     <script>
@@ -22,15 +25,37 @@
 			window.location.replace("/");
 		}
         });
-
-        function startRecord() {
+        
+        socket.on('transcript', (transcript) => {
+            console.log(transcript);
+            var transcriptCont = document.getElementById('transcript');
+            transcriptCont.innerHTML = transcript;
+        });
+        
+        //Handle buttons
+        var stopBtn = document.getElementById('stopBtn');
+        var submitBtn = document.getElementById('submitBtn');
+        
+        function startRecord(el) {
             socket.emit('startRecord', "record"); 
+            stopBtn.style.display = "inline-block";
+            el.style.display = "none";
+            transcript.innerHTML = "Recording...";
         }
-        function stopRecord() {
+        
+        function stopRecord(el) {
             socket.emit('stopRecord', "stopped"); 
+            submitBtn.style.display = "inline-block";
+            startBtn.style.display = "inline-block";
+            el.style.display = "none";
+            transcript.innerHTML = "Waiting for transcript";
         }
-        function save() {
-            socket.emit('saveEntry', true);
+        
+        function save(el) {
+            var transcript = document.getElementById('transcript').innerHTML;
+            socket.emit('saveEntry', transcript);
+            el.style.display = "none";
+            transcript.innerHTML = "Entry successfully sent";
         }
 
     </script>    
