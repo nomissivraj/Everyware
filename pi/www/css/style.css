@@ -11,3 +11,15 @@ canvas {
 	left: 0;
 	z-index: 9;
 }
+
+#stopBtn {
+	display: none;
+}
+
+#submitBtn {
+	display: none;
+}
+
+h1 {
+	color: red;
+}
