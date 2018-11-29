@@ -14,7 +14,7 @@ const { spawn } = require('child_process');
 //const microphone = require('./mic-rec.js');
 var micState; //Variable to set state of microphone for recording funcitons
 const serial = new SerialPort('/dev/ttyUSB0', {	baudRate: 9600});// Monitor pi usb serial port
-var state;// Variable to hold diary state true = open | false = closed
+var bookState;// Variable to hold diary state true = open | false = closed
 //const speechText = require('./speech-text.js');
 
 //function requirements
@@ -28,9 +28,9 @@ const toneAnalysis = require('./tone-analysis.js'); //access to tone analysis
 serial.on('data', (data) => {
     //console.log('Data:', parseInt(data));
     if (parseInt(data) > 50) {
-        state = true;
+        bookState = true;
     } else {
-        state = false;
+        bookState = false;
     }
 });
 
@@ -40,26 +40,30 @@ server.listen(5000); // Port for socket to listen on
 io.on("connection", (socket) => {
     // EMIT TO CLIENT
     setInterval(() => {
-	socket.emit("bookOpen", state);	
+	socket.emit("bookOpen", bookState);
+	if (transcript) {
+	    socket.emit("transcript", transcript);	
+	    transcript = null;
+	    sent = 0;
+	}
     }, 1000);
     //Send book status to client every second - where it will be checked and page changed accordingly.
     
-    onResolveSpeech(socket);
-    
-    //emitOnVarChange(socket, transcript, "transcript", transcript);
-    
+    //onResolveSpeech(socket);
+        
     
     // BACK FORM CLIENT: 
     socket.on('startRecord', (data) => {
         micState = data;
+	console.log("micState from client: " + micState);
 	handleRecording();
-	console.log("state: " + micState);
+	
     });
 
     socket.on('stopRecord', (data) => {
 	micState = data;
+	console.log("micState from client: " + micState);
 	handleRecording();
-	console.log("state: " + micState);
     });
 
     socket.on('saveEntry', (data) => {
@@ -69,28 +73,19 @@ io.on("connection", (socket) => {
 
 
 });
-
-function emitOnVarChange(socket, varName, eventName, data ) {
-    //Funciton that checks a variable on interval and emits variable value when set (only once)
-	var sent = 0;
-	setInterval(() => {
-		if (varName && cnt === 0) {
-		    socket.emit(eventName, data);
-		    sent = 1;
-		}
-	},1000);
-}
+var sent = 0;/*
 
 function onResolveSpeech(socket) {
     //This function checks every second until 
-    var cnt = 0;
+    sent = 0;
 	setInterval(() => {
-	    if (transcript && cnt === 0) {
+	    console.log("checking transcript: ", transcript);
+	    if (transcript && sent === 0) {
 		socket.emit("transcript", transcript);
-		cnt = 1;
+		sent = 1;
 	    }
 	}, 1000);
-}
+}*/
 
 
 //END SOCKETS
@@ -117,9 +112,9 @@ function startRecording(dir,file) {
 }
 
 function stopRecording() {
-    console.log('killing');
-    if (child) child.kill();
-    var text = toText('./', 'test1.wav');
+    /*if (child)*/ child.kill();
+    toText('./', 'test1.wav');
+    micState = null;
   //var tempMessage = "To start off, I think I completely failed my geometry quiz, which I know I should’ve studied more for...my dad’s not gonna be happy about that. :( Then, we had a pop quiz in history on the reading homework from last night, and I completely forgot most of what I read, which made me even more upset because I actually did the reading! But what really made me mad was the note that Sarah slipped into my locker during passing period. She said she was sad that I’ve been hanging out with Jane more lately and thinks that I don’t want to be her friend anymore. I can’t believe she thinks that, especially after talking with her on the phone for hours and hours last month while she was going through her breakup with Nick! Just because I’ve been hanging out with Jane a little more than usual doesn’t mean I’m not her friend anymore. She completely blew me off at lunch, and when I told Jane, she thought that Sarah was being a";
 
   //beginAnalysis(tempMessage);
@@ -162,7 +157,7 @@ function toText(dir,file) {
 
 	// Display events on the console	
 	function onEvent(name, event) {
-		//console.log("EVENT: ", event);
+		console.log("EVENT: ", event);
 		transcript = event;
 	};
 }
@@ -198,15 +193,15 @@ function handleRecording() {
 	switch(micState) {
 	    case "record":
 		startRecording("./", "test1.wav");
+		console.log('current state:', micState);
 	      break;
 	    case "stopped":
-		console.log('stopping the recording?');
+		console.log('currrent state:', micState);
 		stopRecording();
-		//console.log(text);
-  //beginAnalysis(tempMessage); don't we want to do this on hit save
 	      break;
 	    default:
 	      console.log('idle');
+	      console.log('currrent state:', micState);
 	      break;
 	  }
 }
