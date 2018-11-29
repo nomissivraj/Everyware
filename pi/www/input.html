@@ -18,44 +18,61 @@
 
 <script src="/js/socket.io.js"></script>
     <script>
+        //Connect to socket through port in pi/server.js
         var socket = io.connect('http://localhost:5000');
+        //When book open event is sent from server Log book open and switch to index page
         socket.on('bookOpen', (state) => {
-            console.log('book is open');
-		if (state === false) {
-			window.location.replace("/");
-		}
+            if (state === false) {
+                window.location.replace("/");
+            }
         });
         
-        socket.on('transcript', (transcript) => {
-            console.log(transcript);
-            var transcriptCont = document.getElementById('transcript');
-            transcriptCont.innerHTML = transcript;
-        });
-        
-        //Handle buttons
+        //Button Functions
+        //Get buttons
+        var startBtn = document.getElementById('startBtn');
         var stopBtn = document.getElementById('stopBtn');
         var submitBtn = document.getElementById('submitBtn');
+        var transcriptCont = document.getElementById('transcript');
         
+        //on start click - emit 'record' to set recording mode, show stop btn and hide start btn 
         function startRecord(el) {
+            transcriptCont.innerHTML = "";
             socket.emit('startRecord', "record"); 
-            stopBtn.style.display = "inline-block";
+            
+            //Delay user feedback to account for delay in socket communication and beginning of recording
             el.style.display = "none";
-            transcript.innerHTML = "Recording...";
+            submitBtn.style.display = "none";
+            transcriptCont.innerHTML = "..."; //Send ready to record message to user
+            setTimeout(() => {
+                stopBtn.style.display = "inline-block";
+                transcriptCont.innerHTML = "Speak to me :)"; //Send ready to record message to user
+            }, 2000);
         }
         
+        //on stop click - emit 'stopped' to stop recording mode, show submit and start buttons (hide stop button)
         function stopRecord(el) {
             socket.emit('stopRecord', "stopped"); 
             submitBtn.style.display = "inline-block";
             startBtn.style.display = "inline-block";
             el.style.display = "none";
-            transcript.innerHTML = "Waiting for transcript";
+            transcriptCont.innerHTML = "Waiting for transcript..."; // Let user know that transcript incoming 
         }
         
+        //When transcript is recieved from server (triggered by stop state in server) get transcript container and insert transcript
+        socket.on('transcript', (transcriptRes) => {
+            if (transcriptRes) {
+                console.log("recieved transcript");
+                console.log(transcriptRes);
+                transcriptCont.innerHTML = transcriptRes;
+            }
+        });
+        
+        //On save/submit click - emit saveEntry which will get analysis and add entry to database hide save button
         function save(el) {
             var transcript = document.getElementById('transcript').innerHTML;
             socket.emit('saveEntry', transcript);
             el.style.display = "none";
-            transcript.innerHTML = "Entry successfully sent";
+            transcriptCont.innerHTML = "Entry successfully sent";
         }
 
     </script>    
