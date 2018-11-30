@@ -1,4 +1,37 @@
 <h1>{{ title }}</h1>
-<p>Welcome to the {{ title }} page</p>
-<p>Openness:</p>
-<p>{{recentData.big5_openness}}%</p>
+
+<div class="profile__block profile__block--diary-entry">
+    <h2>Lates Diary Entry</h2>
+    <blockquote>Need to get last transcript entry for this area Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent luctus, sapien eu blandit auctor, enim urna volutpat leo, et laoreet est nulla nec nisl. Sed ut augue sit amet orci mollis dictum. Nam aliquam, odio at volutpat ullamcorper, justo eros efficitur elit, sit amet efficitur justo sapien nec magna. Nullam laoreet lectus vitae consequat bibendum. Maecenas at condimentum orci. Praesent enim erat, varius nec nibh non, vulputate commodo magna. Suspendisse nec iaculis velit. Integer fermentum turpis et nisi dictum tincidunt. Pellentesque a libero non purus ullamcorper posuere. Sed quis maximus odio.</blockquote>
+</div>
+<div class="profile__block profile__block--tone">
+    <h2>Tone</h2>
+    <p>get tone results here</p>
+</div>
+<div class="profile__block profile__block--sentiment">
+    <h2>Sentiment</h2>
+    <p>get tone results here</p>
+</div>
+<div class="profile__block profile__block--personality">
+    <h2>Personality Insights</h2>
+    <div class="personality__block personality__block--openness">
+        <h3>Openness:</h3>
+        <p>{{recentData.big5_openness}}%</p>
+    </div>
+    <div class="personality__block personality__block--openness">
+        <h3>Conscientiousness:</h3>
+        <p>{{recentData.big5_conscientiousness}}%</p>
+    </div>
+    <div class="personality__block personality__block--openness">
+        <h3>Extraversion:</h3>
+        <p>{{recentData.big5_extraversion}}%</p>
+    </div>
+    <div class="personality__block personality__block--openness">
+        <h3>Agreableness:</h3>
+        <p>{{recentData.big5_agreeableness}}%</p>
+    </div>
+    <div class="personality__block personality__block--openness">
+        <h3>Neuroticism:</h3>
+        <p>{{recentData.big5_neuroticism}}%</p>
+    </div>
+</div>
