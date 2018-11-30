@@ -8,13 +8,18 @@
     <title>Input</title>
 </head>
 <body>
-    <h1>Input Page</h1>
-    <p>This is where the diary entry input/recording will happen</p>
-    <div id="transcript">
+    <div style="padding: 10px;">
+        <h1>Sensum Diary</h1>
+        <p><span id="dateContainer"></span>Diary Entry</p>
+        <!-- could work out time of day and say good morning or afternoon -->
+        <div id="transcript">
+            Hello there, please begin when you're ready
+        </div>
+        <button id="startBtn" onclick="startRecord(this)">Start</button>
+        <button id="stopBtn" onclick="stopRecord(this)">Stop</button>
+        <button id="submitBtn" onClick="save(this)">Done/submit</button>
     </div>
-    <button id="startBtn" onclick="startRecord(this)">Start</button>
-    <button id="stopBtn" onclick="stopRecord(this)">Stop</button>
-    <button id="submitBtn" onClick="save(this)">Done/submit</button>
+    
 
 <script src="/js/socket.io.js"></script>
     <script>
@@ -74,7 +79,10 @@
             el.style.display = "none";
             transcriptCont.innerHTML = "Entry successfully sent";
         }
-
+        
+            var date = new Date().toLocaleDateString();
+            var dateCont = document.getElementById("dateContainer");
+            dateContainer.innerHTML = date;
     </script>    
 </body>
 </html>
