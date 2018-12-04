@@ -1,9 +1,7 @@
 //Create a Pixi Application
 var app = new PIXI.Application({
     width: 480,
-    height: 800,
-    antialias: true,
-    forceCanvas: true
+    height: 800
 });
 
 
