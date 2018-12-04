@@ -1,7 +1,9 @@
 //Create a Pixi Application
 var app = new PIXI.Application({
     width: 480,
-    height: 800
+    height: 800,
+    legacy: true,
+    roundPixels: true
 });
 
 
@@ -215,7 +217,7 @@ function createSun(parent){
 }
 function Cloud(parent, first){
     
-    this.speed = 0.2;
+    this.speed = 1;
     this.speedMod = getRandomFloat(0, 0.3);
     
     
