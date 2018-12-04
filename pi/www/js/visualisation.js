@@ -95,11 +95,12 @@ function setup(){
 
     
     //start the gameloop
-    app.ticker.add(delta => gameLoop(delta));
+    drawLoop();
     
 }
 
-function gameLoop(delta){
+function drawLoop(){
+    requestAnimationFrame(drawLoop);
     for(var i = 0; i < clouds.length; i++){
         clouds[i].move(i);
     }
