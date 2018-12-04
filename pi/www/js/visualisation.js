@@ -2,7 +2,8 @@
 var app = new PIXI.Application({
     width: 480,
     height: 800,
-    antialias: true
+    antialias: true,
+    forceCanvas: true
 });
 
 
