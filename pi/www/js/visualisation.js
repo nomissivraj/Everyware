@@ -62,25 +62,25 @@ function setup(){
     
     //CREATE GROUND
     //create a sprite from the ground image
-    //let groundSprite = new Sprite(
-    //    loader.resources.groundTex.texture
-    //   );
+    let groundSprite = new Sprite(
+        loader.resources.groundTex.texture
+       );
     
     //position the sprite 
-    //groundSprite.anchor.set(0.5, 0.5);
-    //groundSprite.position.set(canvWidth/2, canvHeight);
-    //groundSprite.scale.set(0.5, 0.5);
-    //groundSprite.zIndex = 10;
+    groundSprite.anchor.set(0.5, 0.5);
+    groundSprite.position.set(canvWidth/2, canvHeight);
+    groundSprite.scale.set(0.5, 0.5);
+    groundSprite.zIndex = 10;
     
     //add the ground to the stage
-    //spriteContainer.addChild(groundSprite);
+    spriteContainer.addChild(groundSprite);
     
     
     //create the rainbow
-    //const rainbowSprite = createRainbow(spriteContainer);
+    const rainbowSprite = createRainbow(spriteContainer);
     
     //create the sun
-    //const sunSprite = createSun(spriteContainer);
+    const sunSprite = createSun(spriteContainer);
     
     //function to get a number of clouds based on openness score.
     setupCloudVariables();
