@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="/lib/p5.min.js"></script>
+    <link rel="stylesheet" href="/css/style.css">
+    <title>Visualisation</title>
+</head>
+<body>
+    <script src="/js/test.js"></script>
+    <script src="/js/socket.io.js"></script>
+    <script>
+        var socket = io.connect('http://localhost:5000');
+        socket.on('bookOpen', (state) => {
+            console.log('book is closed');
+		if (state === true) {
+			window.location.replace("/input");
+		}
+        });
+    </script>
+
+</body>
+</html>

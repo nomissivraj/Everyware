@@ -219,6 +219,10 @@ app.get('/input', (req, res) =>{
     res.sendFile(__dirname + "/www/input.html");
 });
 
+app.get('/test', (req, res) =>{
+    res.sendFile(__dirname + "/www/test.html");
+});
+
 
 app.listen(port, () => {
     console.log(`App listening on port: ${port}`);
