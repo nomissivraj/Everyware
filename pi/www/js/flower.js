@@ -1,49 +1,45 @@
-function Flower(color, petals, currentScore, oldScore, active){
+function Flower(color, petals, currentScore, oldScore, active, parent){
     this.color = color;
     this.petals = petals;
     this.currentScore = currentScore;
     this.health = currentScore - oldScore;
-    console.log("hello");
+    this.state;
     
     if(active){
         if(currentScore <= 20){
-            let img = flower0;
-            this.sprite = new Sprite(img, canvWidth * 0.5, canvHeight * 0.8, 1, 255, 0, 1);
-
+            this.state = "flower0";
         } else if(this.currentScore <= 50){
-            var img
-
-            if(this.health > 0){
-                img = flower1;
+            if(this.health >= 0){
+                this.state = "flower1";
             } else {
-                img = illFlower1;
+                this.state = "illflower1";
             }
-
-            this.sprite = new Sprite(img, canvWidth * 0.5, canvHeight * 0.75, 1, 255, 0, 1);
         } else if(this.currentScore <= 70){
-            var img
-
-            if(this.health > 0){
-                img = flower2;
+            if(this.health >= 0){
+                this.state = "flower2";
             } else {
-                img = illFlower2;
+                this.state = "illflower2";
             }
-
-            this.sprite = new Sprite(img, canvWidth * 0.5, canvHeight * 0.70, 1, 255, 0, 1);
         } else if(this.currentScore < 100){
-            var img
-
-            if(this.health > 0){
-                img = flower3;
+            if(this.health >= 0){
+                this.state = "flower3";
             } else {
-                img = illFlower3;
+                this.state = "illflower3";
             }
-
-            this.sprite = new Sprite(img, canvWidth * 0.5, canvHeight * 0.65, 1, 255, 0, 1);
         }
         if(currentScore >= 100){
-            let img = flower4;
-            this.sprite = new Sprite(img, canvWidth * 0.5, canvHeight * 0.55, 1, 255, 0, 1);
+            this.state = "flower4";
         }
+        
+        let flowerSprite = new Sprite(loader.resources[this.state].texture);
+        flowerSprite.anchor.set(0.5, 1);
+        flowerSprite.position.set(canvWidth * 0.5, canvHeight * 0.9);
+        parent.addChild(flowerSprite);
+        
+        
+        
     }
+    
+    
+    
 }

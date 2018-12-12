@@ -70,6 +70,10 @@ io.on("connection", (socket) => {
 	console.log("saving text: ", data);
 	beginAnalysis(data);
     });
+    
+    socket.on('newFlower', (data) => {
+	mongoDB.PushtoMongoReplace("ActiveFlower", data);
+    });
 
 
 });

@@ -27,3 +27,19 @@ exports.PushtoMongo = function(colName, data){
 
 }
 
+exports.PushtoMongoReplace = function(colName, data){
+
+    MongoClient.connect(url, (err, db) => {
+        if (err) throw err; //throw error if can't connect
+        
+        var dbo = db.db('dat602');
+                
+        dbo.collection(colName).replaceOne({ }, data, {upsert: true}, (err, res) => { //add document to collection using the passed in collection name
+            if (err) throw err;
+            console.log('new Flower ' + colName);
+            db.close;
+        });   
+    });
+
+}
+

@@ -36,6 +36,9 @@ document.body.appendChild(app.view);
 //make the canvas sky coloured.
 app.renderer.backgroundColor = 0xABEBFF;
 
+//flower variables
+var activeFlower, flowerComplete, petalColors, flowerPlanted;
+
 
 //cloud variables
 var cloudSpeed, cloudNum;
@@ -49,13 +52,31 @@ loader
     .add("rainbowTex", "assets/rainbow.png")
     .add("sunTex", "assets/sun.png")
     .add("cloudTex", "assets/cloud.png")
+    .add("flower0", "assets/flower0.png")
+    .add("flower1", "assets/flower1.png")
+    .add("flower2", "assets/flower2.png")
+    .add("flower3", "assets/flower3.png")
+    .add("flower4", "assets/flower4.png")
+    .add("illflower1", "assets/illflower1.png")
+    .add("illflower2", "assets/illflower2.png")
+    .add("illflower3", "assets/illflower3.png")
     .add("persJSON", "https://api.mlab.com/api/1/databases/dat602/collections/Personality?apiKey=zQ7SEYq_OxfzvDkJvF_DRW2HIPhPFv9i")
+    .add("activeFlowerJSON", "https://api.mlab.com/api/1/databases/dat602/collections/ActiveFlower?apiKey=zQ7SEYq_OxfzvDkJvF_DRW2HIPhPFv9i")
     .load(setup);
 
 function setup(){
     
+    petalColors = [
+        "ff0000",
+        "00ff00",
+        "0000ff"
+    ];
+    
     //parse the personality JSON data that's loaded in
     parsePersonality(loader.resources.persJSON.data);
+    
+    // setup the active flower data
+    setupActiveFlower(loader.resources.activeFlowerJSON.data);
     
     //create a container to hold the sprites
     app.stage.addChild(spriteContainer);
@@ -68,12 +89,13 @@ function setup(){
     
     //position the sprite 
     groundSprite.anchor.set(0.5, 0.5);
-    groundSprite.position.set(canvWidth/2, canvHeight);
-    groundSprite.scale.set(0.5, 0.5);
-    groundSprite.zIndex = 10;
+    groundSprite.position.set(canvWidth/2, canvHeight * 0.91);
+    groundSprite.scale.set(0.9);
+    
     
     //add the ground to the stage
     spriteContainer.addChild(groundSprite);
+    spriteContainer.setChildIndex(groundSprite, 0);
     
     
     //create the rainbow
@@ -122,6 +144,45 @@ function parsePersonality(data){
     neuroticismScore = lastEntry.big5_neuroticism;
 }
 
+function setupActiveFlower(data){
+    activeFlowerJSON = JSON.parse(data);
+    if(activeFlowerJSON.length == 0){
+        flowerPlanted = false;
+    } else {
+        flowerPlanted = true;
+        let color = activeFlowerJSON[0].color;
+        let petals = activeFlowerJSON[0].petals;
+        let currentScore = activeFlowerJSON[0].currentFlowerScore;
+        if(currentScore >= 100){
+            flowerComplete = true;
+        }
+        let oldScore = activeFlowerJSON[0].oldFlowerScore;
+        activeFlower = new Flower(color, petals, currentScore, oldScore, true, spriteContainer);
+    }
+    
+}
+
+var canvas = document.getElementsByTagName("canvas")[0];
+canvas.addEventListener("click", () => {
+    if(flowerComplete || !flowerPlanted){
+        createNewFlower();
+    }
+});
+
+
+
+function createNewFlower(){
+    let newFlower = {
+        color: petalColors[getRandomInt(0, petalColors.length - 1)],
+        petals: getRandomInt(0, 3),
+        currentFlowerScore: 0,
+        oldFlowerScore: 0
+    }
+    flowerPlanted = true;
+    flowerComplete = false;
+    socket.emit('newFlower', newFlower);
+}
+
 function setupCloudVariables(){
     if(opennessScore == 100){
         cloudNum = 0;
@@ -166,9 +227,9 @@ function createRainbow(parent)
     );
     //position and scale sprite
     rainbowSprite.anchor.set(0.5);
-    rainbowSprite.rotation = -1.2;
-    rainbowSprite.position.set(canvWidth*0.55, canvHeight* 0.75);
-    rainbowSprite.scale.set(0.35);
+    rainbowSprite.rotation = -0.5;
+    rainbowSprite.position.set(canvWidth*0.65, canvHeight* 0.75);
+    rainbowSprite.scale.set(1);
     
     //set alpha of rainbow to match extraversion score
     //any score below 50 gives a alpha of 0, 50 - 100 scales from 0 to 1 alpha
@@ -202,7 +263,7 @@ function createSun(parent){
         app.renderer.backgroundColor = 0x889EA3;
     } else {
         normalizedAgree = (agreeablenessScore - 30) / 70;
-        sunScale = 0.1 + (0.35 * normalizedAgree);
+        sunScale = 0.4 + (0.35 * normalizedAgree);
         
     }
     sunSprite.scale.set(sunScale);
@@ -217,8 +278,7 @@ function createSun(parent){
 }
 function Cloud(parent, first){
     
-    this.speed = 1;
-    this.speedMod = getRandomFloat(0, 0.3);
+    this.speed = 0.2 + getRandomFloat(0, 0.5);
     
     
     //if first clouds then spawn on screen
@@ -239,12 +299,12 @@ function Cloud(parent, first){
     //position and scale sprite
     cloudSprite.position.set(this.xLoc, this.yLoc);
     cloudSprite.anchor.set(0.5);
-    cloudSprite.scale.set(getRandomFloat(0.3, 0.5));
+    cloudSprite.scale.set(getRandomFloat(0.5, 0.9));
     cloudSprite.alpha = 1;
 
     
     this.move = function(index ) {
-        cloudSprite.position.x += this.speed + this.speedMod;
+        cloudSprite.position.x += this.speed;
         
         //if the cloud is fully off the screen delete it
         if(cloudSprite.position.x - (cloudSprite.width /2) > canvWidth){
