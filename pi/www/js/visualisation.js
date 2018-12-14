@@ -14,7 +14,8 @@ var Application = PIXI.Application,
     Sprite = PIXI.Sprite,
     TextureCache = PIXI.utils.TextureCache,
     canvWidth = app.renderer.view.width,
-    canvHeight = app.renderer.view.height;
+    canvHeight = app.renderer.view.height,
+    text = PIXI.Text;
 
 //variables to hold personality scores
 var opennessScore,
@@ -37,8 +38,10 @@ document.body.appendChild(app.view);
 app.renderer.backgroundColor = 0xABEBFF;
 
 //flower variables
-var activeFlower, flowerComplete, petalColors, flowerPlanted;
+var activeFlower, flowerComplete, petalColors, flowerPlanted, flowerSprite;
 
+//text variables
+var style, noFlowerText, flowerCompleteText;
 
 //cloud variables
 var cloudSpeed, cloudNum;
@@ -60,17 +63,42 @@ loader
     .add("illflower1", "assets/illflower1.png")
     .add("illflower2", "assets/illflower2.png")
     .add("illflower3", "assets/illflower3.png")
+    .add('flowerCenter', "assets/flowercenter.png")
+    .add('petals0', "assets/petals0.png")
+    .add('petals1', "assets/petals1.png")
+    .add('petals2', "assets/petals2.png")
+    .add('petals3', "assets/petals3.png")
+    .add('petals4', "assets/petals4.png")
     .add("persJSON", "https://api.mlab.com/api/1/databases/dat602/collections/Personality?apiKey=zQ7SEYq_OxfzvDkJvF_DRW2HIPhPFv9i")
     .add("activeFlowerJSON", "https://api.mlab.com/api/1/databases/dat602/collections/ActiveFlower?apiKey=zQ7SEYq_OxfzvDkJvF_DRW2HIPhPFv9i")
     .load(setup);
 
 function setup(){
     
+    
+    //array of petal colors
     petalColors = [
-        "ff0000",
-        "00ff00",
-        "0000ff"
+        "0xff8200", //orange
+        "0x15e1ff", //blue
+        "0xff9098", //pink
+        "0x9f67d2", //yellow
+        "0xffff1e" //purple
+        
     ];
+    
+    //set up text styles
+    style = new PIXI.TextStyle({
+        align: 'center',
+        fontFamily: 'Arial',
+        fontSize: 26,
+        fontWeight: 'bold',
+        fill: '#ffffff', // gradient
+        stroke: '#000000',
+        strokeThickness: 3,
+        wordWrap: true,
+        wordWrapWidth: 440
+    });
+    
     
     //parse the personality JSON data that's loaded in
     parsePersonality(loader.resources.persJSON.data);
@@ -89,7 +117,7 @@ function setup(){
     
     //position the sprite 
     groundSprite.anchor.set(0.5, 0.5);
-    groundSprite.position.set(canvWidth/2, canvHeight * 0.91);
+    groundSprite.position.set(canvWidth * 0.5, canvHeight * 0.9);
     groundSprite.scale.set(0.9);
     
     
@@ -148,6 +176,12 @@ function setupActiveFlower(data){
     activeFlowerJSON = JSON.parse(data);
     if(activeFlowerJSON.length == 0){
         flowerPlanted = false;
+        noFlowerText = new text('No flower planted! Tap the screen to plant!', style);
+        noFlowerText.anchor.set(0.5);
+        noFlowerText.x = canvWidth / 2;
+        noFlowerText.y = canvHeight * 0.95;
+        spriteContainer.addChild(noFlowerText);
+        
     } else {
         flowerPlanted = true;
         let color = activeFlowerJSON[0].color;
@@ -155,6 +189,11 @@ function setupActiveFlower(data){
         let currentScore = activeFlowerJSON[0].currentFlowerScore;
         if(currentScore >= 100){
             flowerComplete = true;
+            flowerCompleteText = new text('Flower Complete! Tap to save and plant a new seed.', style);
+                flowerCompleteText.anchor.set(0.5);
+                flowerCompleteText.x = canvWidth / 2;
+                flowerCompleteText.y = canvHeight * 0.95;
+                spriteContainer.addChild(flowerCompleteText);
         }
         let oldScore = activeFlowerJSON[0].oldFlowerScore;
         activeFlower = new Flower(color, petals, currentScore, oldScore, true, spriteContainer);
@@ -174,10 +213,17 @@ canvas.addEventListener("click", () => {
 function createNewFlower(){
     let newFlower = {
         color: petalColors[getRandomInt(0, petalColors.length - 1)],
-        petals: getRandomInt(0, 3),
+        petals: getRandomInt(0, 4),
         currentFlowerScore: 0,
         oldFlowerScore: 0
     }
+    if(!flowerPlanted) spriteContainer.removeChild(noFlowerText);
+    if(flowerComplete) {
+        spriteContainer.removeChild(flowerCompleteText);
+        spriteContainer.removeChild(flowerSprite);
+    }
+    //create temp seed planted flower
+    activeFlower = new Flower(0, 0, 0, 0, true, spriteContainer);
     flowerPlanted = true;
     flowerComplete = false;
     socket.emit('newFlower', newFlower);
@@ -289,7 +335,7 @@ function Cloud(parent, first){
     }
     
     //get random y value in top quarter of canvas
-    this.yLoc = getRandomInt(canvHeight * 0.1, canvHeight * 0.35);
+    this.yLoc = getRandomInt(canvHeight * 0.1, canvHeight * 0.25);
     
     //create cloud sprite
     let cloudSprite = new Sprite(

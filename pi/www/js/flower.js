@@ -27,13 +27,30 @@ function Flower(color, petals, currentScore, oldScore, active, parent){
                 this.state = "illflower3";
             }
         }
-        if(currentScore >= 100){
+        if(this.currentScore >= 100){
             this.state = "flower4";
         }
         
-        let flowerSprite = new Sprite(loader.resources[this.state].texture);
+        flowerSprite = new Sprite(loader.resources[this.state].texture);
         flowerSprite.anchor.set(0.5, 1);
-        flowerSprite.position.set(canvWidth * 0.5, canvHeight * 0.9);
+        flowerSprite.position.set(canvWidth * 0.5, canvHeight * 0.8);
+        if(this.currentScore >= 100){
+            
+            //draw the petals and tint
+            let petalString = "petals" + this.petals;
+            
+            let petalSprite = new Sprite(loader.resources[petalString].texture);
+            petalSprite.anchor.set(0.5);
+            petalSprite.tint = this.color;
+            petalSprite.y = -300;
+            flowerSprite.addChild(petalSprite);
+            
+            //create the center of the flower
+            let flowerCenter = new Sprite(loader.resources.flowerCenter.texture);
+            flowerCenter.anchor.set(0.5);
+            flowerCenter.y = -300;
+            flowerSprite.addChild(flowerCenter);
+        }
         parent.addChild(flowerSprite);
         
         

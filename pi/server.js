@@ -72,7 +72,7 @@ io.on("connection", (socket) => {
     });
     
     socket.on('newFlower', (data) => {
-	mongoDB.PushtoMongoReplace("ActiveFlower", data);
+	mongoDB.PushtoMongoReplaceNewFlower("ActiveFlower", data);
     });
 
 
