@@ -33,7 +33,7 @@ function Flower(color, petals, currentScore, oldScore, active, parent){
         
         flowerSprite = new Sprite(loader.resources[this.state].texture);
         flowerSprite.anchor.set(0.5, 1);
-        flowerSprite.position.set(canvWidth * 0.5, canvHeight * 0.8);
+        flowerSprite.position.set(canvWidth * 0.5, canvHeight * 0.84);
         if(this.currentScore >= 100){
             
             //draw the petals and tint
@@ -42,15 +42,16 @@ function Flower(color, petals, currentScore, oldScore, active, parent){
             let petalSprite = new Sprite(loader.resources[petalString].texture);
             petalSprite.anchor.set(0.5);
             petalSprite.tint = this.color;
-            petalSprite.y = -300;
+            petalSprite.y = -600;
             flowerSprite.addChild(petalSprite);
             
             //create the center of the flower
             let flowerCenter = new Sprite(loader.resources.flowerCenter.texture);
             flowerCenter.anchor.set(0.5);
-            flowerCenter.y = -300;
+            flowerCenter.y = -600;
             flowerSprite.addChild(flowerCenter);
         }
+        flowerSprite.scale.set(0.8);
         parent.addChild(flowerSprite);
         
         

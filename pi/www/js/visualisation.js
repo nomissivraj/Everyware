@@ -1,7 +1,7 @@
 //Create a Pixi Application
 var app = new PIXI.Application({
-    width: 480,
-    height: 800,
+    width: 600,
+    height: 1024,
     legacy: true,
     roundPixels: true
 });
@@ -69,6 +69,9 @@ loader
     .add('petals2', "assets/petals2.png")
     .add('petals3', "assets/petals3.png")
     .add('petals4', "assets/petals4.png")
+    .add('petals5', "assets/petals5.png")
+    .add('petals6', "assets/petals6.png")
+    .add('petals7', "assets/petals7.png")
     .add("persJSON", "https://api.mlab.com/api/1/databases/dat602/collections/Personality?apiKey=zQ7SEYq_OxfzvDkJvF_DRW2HIPhPFv9i")
     .add("activeFlowerJSON", "https://api.mlab.com/api/1/databases/dat602/collections/ActiveFlower?apiKey=zQ7SEYq_OxfzvDkJvF_DRW2HIPhPFv9i")
     .load(setup);
@@ -82,7 +85,10 @@ function setup(){
         "0x15e1ff", //blue
         "0xff9098", //pink
         "0x9f67d2", //yellow
-        "0xffff1e" //purple
+        "0xffff1e", //light purple
+        "0xe10000", //red
+        "0x1fe4c7", //teal
+        "0x59038a" // dark purple
         
     ];
     
@@ -117,7 +123,7 @@ function setup(){
     
     //position the sprite 
     groundSprite.anchor.set(0.5, 0.5);
-    groundSprite.position.set(canvWidth * 0.5, canvHeight * 0.9);
+    groundSprite.position.set(canvWidth * 0.5, canvHeight * 0.95);
     groundSprite.scale.set(0.9);
     
     
@@ -213,7 +219,7 @@ canvas.addEventListener("click", () => {
 function createNewFlower(){
     let newFlower = {
         color: petalColors[getRandomInt(0, petalColors.length - 1)],
-        petals: getRandomInt(0, 4),
+        petals: getRandomInt(0, 7),
         currentFlowerScore: 0,
         oldFlowerScore: 0
     }
