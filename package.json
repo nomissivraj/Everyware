@@ -1,21 +1,14 @@
 {
-  "name": "iot-network-vis",
+  "name": "front-end-web",
   "version": "1.0.0",
   "description": "",
   "main": "server.js",
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "bufferutil": "^3.0.3",
-    "cfenv": "^1.1.0",
     "express": "^4.16.2",
     "express-handlebars": "^3.0.0",
-    "http": "0.0.0",
-    "mongodb": "^3.1.8",
-    "path": "^0.12.7",
-    "utf-8-validate": "4.0.0",
-    "watson-developer-cloud": "^3.13.0",
-    "ws": "^4.0.0"
+    "mongodb": "^3.1.8"
   },
   "engines": {
     "node": "6.2.0"
