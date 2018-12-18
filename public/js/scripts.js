@@ -1,6 +1,6 @@
 function menuAnimation() {
     var menu = document.getElementsByTagName('header')[0];
-    var page = document.getElementsByClassName('main')[0];
+    var page = document.getElementsByTagName('main')[0];
     var pageStyles = page.currentStyle || window.getComputedStyle(page);
     var curLeftMargin = parseInt(pageStyles.marginLeft);
     console.log(curLeftMargin);
