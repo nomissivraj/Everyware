@@ -2,11 +2,6 @@ const WEB_PORT = 4000; //port for webserver to run on
 //dependencies for general nodejs server routing etc...
 const express = require('express');
 const app = express();
-const http = require('http').Server(app);
-
-const mongoDB = require('./push-mongo-DB.js'); //enable access to pushtomongo function
-const personalityInsight = require('./personality-insight.js'); //access to personality insight analysis
-const toneAnalysis = require('./tone-analysis.js'); //access to tone analysis
 
 //Front End
 const getMongoD = require("./getMongoD");
