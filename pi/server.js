@@ -13,7 +13,7 @@ const { spawn } = require('child_process');
 //var child;//child process variable
 //const microphone = require('./mic-rec.js');
 var micState; //Variable to set state of microphone for recording funcitons
-const serial = new SerialPort('/dev/ttyUSB0', {	baudRate: 9600});// Monitor pi usb serial port
+const serial = new SerialPort('COM5', {	baudRate: 9600});// Monitor pi usb serial port
 var bookState;// Variable to hold diary state true = open | false = closed
 //const speechText = require('./speech-text.js');
 
@@ -26,12 +26,14 @@ const toneAnalysis = require('./tone-analysis.js'); //access to tone analysis
 //Serial Monitoring of sensor to check if diary is open/active or not
 //Puts port in flowing mode
 serial.on('data', (data) => {
-    //console.log('Data:', parseInt(data));
-    if (parseInt(data) > 50) {
-        bookState = true;
-    } else {
-        bookState = false;
-    }
+	if (parseInt(data) > 0 ) {
+		//console.log('Data:', parseInt(data));
+		if (parseInt(data) > 50) {
+			bookState = true;
+		} else {
+			bookState = false;
+		}
+	} 
 });
 
 //Sockets (server-side/client-side communication)
