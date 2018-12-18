@@ -27,14 +27,33 @@ exports.PushtoMongo = function(colName, data){
 
 }
 
-exports.PushtoMongoReplace = function(colName, data){
+exports.PushtoMongoReplaceNewFlower = function(colName, data){
 
     MongoClient.connect(url, (err, db) => {
         if (err) throw err; //throw error if can't connect
         
         var dbo = db.db('dat602');
-                
-        dbo.collection(colName).replaceOne({ }, data, {upsert: true}, (err, res) => { //add document to collection using the passed in collection name
+        
+        dbo.collection("ActiveFlower").find({}).toArray((err, result) => { //get active flower data
+            if (err) throw err;
+            if(result.length < 1) { //if it doesnt exist, return.
+                return;
+            } else {
+                //save old active flower data in object
+                var flowerData = {
+                    color: result[0].color,
+                    petals: result[0].petals
+                }
+                dbo.collection('Flowers').insertOne(flowerData, (err, res) => { //add old flower data to collection
+                    if (err) throw err;
+                    console.log('old flower saved');
+                    db.close;
+                });
+            }
+            
+        })
+        
+        dbo.collection(colName).replaceOne({ }, data, {upsert: true}, (err, res) => { //create new flower data using passed in object
             if (err) throw err;
             console.log('new Flower ' + colName);
             db.close;
