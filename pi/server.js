@@ -102,6 +102,9 @@ var child;
 function startRecording(dir,file) {
   console.log("recording");
 
+  	child = spawn('sox', ['-t waveaudio', '-d', dir+file]);
+
+	/* Following code is for Raspberry Pi/Linux
 	child = spawn('arecord', ['-r 16000', '-c 1', '-fS16_LE', dir+file]);
 
 	child.stdout.on('data', (data) => {
@@ -114,7 +117,7 @@ function startRecording(dir,file) {
 
 	child.on('close', (code) => {
 	  console.log(`child process exited with code ${code}`);
-	});
+	});*/
 }
 
 function stopRecording() {
@@ -198,7 +201,7 @@ function handleRecording() {
 	//Switch statement to handle recording based on state of book open/closed/stopped etc.
 	switch(micState) {
 	    case "record":
-		startRecording("./", "test1.wav");
+		startRecording(__dirname+"/audio/", "test1.wav");
 		console.log('current state:', micState);
 	      break;
 	    case "stopped":
