@@ -1,2 +1,33 @@
 <h1>{{ title }}</h1>
-<p>Welcome to the {{ title }} page</p>
+<p>Viewing available entries from the last 31 days</p>
+{{#each this.recentData}}
+    <div class="row">
+        <div class="diary-text">
+            Diary entry text here
+        </div>
+        <div class="col">
+            <span class="col__data col__data--title">Date:</span>
+            <span class="col__data col__data--value">{{timestamp}}</span>
+        </div>
+        <div class="col">
+            <span class="col__data col__data--title">Openness: </span>
+            <span class="col__data col__data--value">{{big5_openness}}%</span>
+        </div>
+        <div class="col">
+            <span class="col__data col__data--title">Conscientiousness: </span>
+            <span class="col__data col__data--value">{{big5_conscientiousness}}%</span>
+        </div>
+        <div class="col">
+            <span class="col__data col__data--title">Extraversion: </span>
+            <span class="col__data col__data--value">{{big5_extraversion}}%</span>
+        </div>
+        <div class="col">
+            <span class="col__data col__data--title">Agreeableness: </span>
+            <span class="col__data col__data--value">{{big5_agreeableness}}%</span>
+        </div>
+        <div class="col">
+            <span class="col__data col__data--title">Neuroticism: </span>
+            <span class="col__data col__data--value">{{big5_neuroticism}}%</span>
+        </div>
+    </div>
+{{/each}}
