@@ -39,17 +39,42 @@ h1 {
 	text-transform: uppercase;
 }
 
+#information {
+    background: #c3c3c3;
+    width: 100%;
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 10px 20px;
+	border-radius: 5px;
+	position: relative;
+}
+
+#information::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%) translateY(-100%);
+    border-left: solid transparent;
+    border-right: solid transparent;
+    border-top: solid transparent;
+    border-bottom: 0px solid #c3c3c3;
+    border-width: 20px;
+}
+
 #transcript {
 	max-width: 400px;
-	min-width: 200px;
-	background: rgba(0,0,0,.2);
-	min-height: 100px;
-	margin: 20px auto;
-	padding: 20px;
-	width: calc(100% - 40px);
-	border: 4px solid rgba(0,0,0,.2);
-	vertical-align: middle;
-	border-radius: 10px;
+    min-width: 200px;
+    background: rgba(0,0,0,.2);
+    min-height: 100px;
+    max-height: 400px;
+    overflow-y: auto;
+    margin: 20px auto;
+    padding: 20px;
+    width: calc(100% - 40px);
+    border: 4px solid rgba(0,0,0,.2);
+    vertical-align: middle;
+    border-radius: 10px;
 }
 
 button {
@@ -71,4 +96,10 @@ button:hover, button:focus {
 #dateContainer {
 	color: rgba(0,0,0,.6);
 	padding-right: 20px;
+}
+
+.logo {
+	max-width: 100px;
+	padding: 20px;
+	opacity: .4;
 }
