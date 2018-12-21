@@ -46,6 +46,7 @@ io.on("connection", (socket) => {
     setInterval(() => {
 		socket.emit("bookOpen", bookState);
 		if (transcript) {
+			console.log("sending transcript")
 			socket.emit("transcript", transcript);	
 			transcript = null;
 			sent = 0;
@@ -63,6 +64,7 @@ io.on("connection", (socket) => {
 
     socket.on('stopRecord', (data) => {
 		micState = data;
+		sent = 0;
 		console.log("micState from client: " + micState);
 		handleRecording();
     });
