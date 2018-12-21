@@ -46,11 +46,12 @@ table {
 
 /*
 Table of Contents:
-    -Core Styles
-    -Header
-        -Navigation
-    -Main Page
-    -Footer 
+    - Core Styles
+    - Header
+        - Navigation
+    - Main Page
+    - History Table
+    - Footer 
 
 */
 
@@ -64,12 +65,14 @@ body {
     background: -moz-radial-gradient(center, #f7f7f7 -0%, #e9e9e9 70%);
     background: -o-radial-gradient(center, #f7f7f7 -0%, #e9e9e9 70%);
     background: radial-gradient(center, #f7f7f7 -0%, #e9e9e9 70%);
-    background-repeat:no-repeat;
     height: 100%;
     font-family: Arial, Helvetica, sans-serif;
+    overflow-x: hidden;
 }
 
-
+strong {
+    font-weight: bold;
+}
 
 canvas {
 	padding: 0;
@@ -81,7 +84,7 @@ canvas {
 }
 
 h1 {
-    color: #444;
+    color: rgba(221, 99, 0, 0.7);
     font-size: 2em;
     padding: 0 0 20px 0;
     text-transform: uppercase;
@@ -225,41 +228,112 @@ main {
     max-width: 1300px;
 }
 
-.profile__block,
+.block,
 article {
     padding: 20px;
     float: left;
     width: calc(100% - 40px);
     margin: 10px 0;
+    border-radius: 5px;
 }
 
-.profile__block--tone,
-.profile__block--sentiment {
+article {
+    padding-left: 0px;
+}
+
+.block--tone,
+.block--sentiment {
     width: calc(50% - 40px);
-    background: rgba(0,0,0,.1);
+    background: rgba(221, 99, 0, 0.7);
 }
-.profile__block--tone {
+.block--tone {
     padding-right: 20px;
+    border-radius: 5px 0 0 5px;
 }
 
-.profile__block--personality {
-    background: rgba(0,0,0,0.05);
+.block--sentiment {
+    border-radius: 0 5px 5px 0;
+}
+
+.block--personality {
+    background: rgba(221, 99, 0, 0.7);
 }
 
 .personality__block {
     float: left;
     padding: 20px 40px 20px 20px;
     width: calc(20% - 52px);
-    background: rgba(0,0,0,0.05);
 }
 
-.team__member {
+.personality__block--container {
+    border-radius: 5px;
+    overflow: hidden;
+    background: rgba(255, 255, 255, 0.4);
+}
+
+.block--team {
     float: left;
     padding: 20px;
-    margin: 20px;
-    width: calc(33% - 80px);
-    background: rgba(0,0,0,.1);
+    margin-right: 20px;
+    width: calc(33% - 53px);
+    background: rgba(221, 99, 0, 0.7);
 }
+
+.block--team h3 {
+    color: #fff;
+}
+
+.block--team:last-of-type {
+    margin-right:0;
+}
+
+.block--user {
+    padding-left: 0;
+}
+
+.block--diary-entry {
+    padding-left: 0;
+}
+
+/* History Page */
+.row {
+    width: 100%;
+    overflow: hidden;
+    margin: 10px 0 30px 0;
+    background: #e0e0e0;
+    border: 2px solid #adadad;
+    border-radius: 5px;
+}
+
+.diary-text {
+    padding: 20px 10px;
+}
+
+.row .col {
+    float:left;
+    width: 16.666%;
+}
+
+.col .col__data {
+    display: block;
+    padding: 10px;
+    font-weight: bold;
+}
+
+.col__data--title {
+    background: rgba(221, 99, 0, 0.7);
+    color: #fff;
+    border-right:2px solid rgba(255, 255, 255, 0.1);
+}
+
+.col:last-child .col__data--title {
+    border-right:0;
+}
+
+.col__data--value {
+
+}
+
 /* Footer */
 footer {
     position: fixed;
@@ -276,14 +350,43 @@ footer {
     }    
 }
 
+@media (max-width:1200px) {
+    .row .col {
+        width: 33.33%;
+    }
+}
+
 @media (max-width:1080px) {
     .personality__block {
         width: calc(50% - 60px);
     }
 }
 
+
+@media (max-width:750px) {
+    .row .col {
+        width: 50%;
+    }
+
+    .block--team {
+        width: calc(100% - 20px);
+    }
+
+}
+
 @media (max-width:600px) {
     .personality__block {
         width: calc(100% - 60px);
+    }
+}
+
+@media (max-width:550px) {
+    .row .col {
+        width: 100%;
+    }
+
+    .block--tone, .block--sentiment {
+        width: calc(100% - 40px);
+        border-radius: 5px;
     }
 }
