@@ -12,8 +12,12 @@
         <h1>Sensum Diary</h1>
         <p><span id="dateContainer"></span>Diary Entry</p>
         <!-- could work out time of day and say good morning or afternoon -->
-        <div id="transcript">
+        <img class="logo" src="img/logo.svg" alt="logo">
+        <div id="information">
             Hello there, please begin when you're ready
+        </div>
+        <div id="transcript">
+            
         </div>
         <button id="startBtn" onclick="startRecord(this)">Start</button>
         <button id="stopBtn" onclick="stopRecord(this)">Stop</button>
@@ -38,6 +42,7 @@
         var stopBtn = document.getElementById('stopBtn');
         var submitBtn = document.getElementById('submitBtn');
         var transcriptCont = document.getElementById('transcript');
+        var infoCont = document.getElementById('information');
         
         //on start click - emit 'record' to set recording mode, show stop btn and hide start btn 
         function startRecord(el) {
@@ -47,10 +52,10 @@
             //Delay user feedback to account for delay in socket communication and beginning of recording
             el.style.display = "none";
             submitBtn.style.display = "none";
-            transcriptCont.innerHTML = "..."; //Send ready to record message to user
+            infoCont.innerHTML = "One moment..."; //Send ready to record message to user
             setTimeout(() => {
                 stopBtn.style.display = "inline-block";
-                transcriptCont.innerHTML = "Speak to me :)"; //Send ready to record message to user
+                infoCont.innerHTML = "Speak to me :)"; //Send ready to record message to user
             }, 2000);
         }
         
@@ -60,7 +65,7 @@
             submitBtn.style.display = "inline-block";
             startBtn.style.display = "inline-block";
             el.style.display = "none";
-            transcriptCont.innerHTML = "Waiting for transcript..."; // Let user know that transcript incoming 
+            infoCont.innerHTML = "Waiting for transcript..."; // Let user know that transcript incoming 
         }
         
         //When transcript is recieved from server (triggered by stop state in server) get transcript container and insert transcript
@@ -77,7 +82,7 @@
             var transcript = document.getElementById('transcript').innerHTML;
             socket.emit('saveEntry', transcript);
             el.style.display = "none";
-            transcriptCont.innerHTML = "Entry successfully sent";
+            infoCont.innerHTML = "Entry successfully sent";
         }
         
             var date = new Date().toLocaleDateString();
