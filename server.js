@@ -41,13 +41,16 @@ app.get('/', (req, res, next) => {
 app.get('/profile', (req, res) => {
     //refering to the function in getMongoD.js - use promise to retrive recent data only when promise is fullfilled
     //Only when promise is fulfulled will the page render happen. MIGHT NEED TO TEST WHAT HAPPENS IF NO DATA EXISTS?
-    getMongoD.getLastEntry('dat602', 'Personality').then((recentData) => {
+    getMongoD.getEntries('dat602', 'Personality', 1).then((recentData) => {
+        recentData = recentData[0];//Since only one item and can't be looped need to select the first (only) object 
         res.render('profile', { title: 'Profile', condition: false, recentData});
     });
 });
 
 app.get('/history', (req, res) => {
-    res.render('history', { title: 'History', condition: false});
+    getMongoD.getEntries('dat602', 'Personality', 31).then((recentData) => {
+        res.render('history', { title: 'History', condition: false, recentData});
+    });
 });
 
 app.get('/about', (req, res) => {
