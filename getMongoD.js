@@ -5,7 +5,7 @@ var MongoClient = require('mongodb').MongoClient;
 var url = 'mongodb://testuser:testuser1@ds147440.mlab.com:47440/dat602';
 
 //Function to get last entry with parameters
-exports.getLastEntry = (dbname, collection) => {
+exports.getEntries = (dbname, collection, num) => {
 /*
   Using a promise to resolve the data - otherwise without promise, page render could happen before data is retrieved
 */
@@ -16,15 +16,14 @@ exports.getLastEntry = (dbname, collection) => {
       if (err) throw err;
       var dbo = db.db(dbname);
       //Find last document | limit(1) means only get one result | $natural:-1 means reverse order = last document/entry 
-      dbo.collection(collection).find().sort({$natural:-1}).limit(1).toArray( function(err, result) {
+      dbo.collection(collection).find().sort({$natural:-1}).limit(num).toArray( function(err, result) {
         if (err) throw err;
         data = result;
         db.close();
-        console.log(data);
 
         //evaluate promise - if data exists resolve data otherwise send error
         if(data) {
-          resolve(data[0]);
+          resolve(data);
         } else {
           reject(Error("No data"));
         }
