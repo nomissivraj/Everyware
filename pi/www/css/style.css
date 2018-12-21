@@ -43,7 +43,7 @@ main {
     position: relative;
     top: 50%;
 	transform: translateY(-50%);
-	margin-top: -20px;
+	margin-top: -21px;
 }
 
 #information {
