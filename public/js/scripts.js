@@ -12,4 +12,5 @@ function menuAnimation() {
         page.style.marginLeft = curLeftMargin + "px";
         menu.classList.remove('header--open');
     });
+
 }

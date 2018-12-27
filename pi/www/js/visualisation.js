@@ -31,6 +31,9 @@ var clouds = [];
 //Container to hold all sprites
 var spriteContainer = new PIXI.Container();
 
+//Container to hold buttons
+var btnContainer = new PIXI.Container();
+
 //Add the canvas to the HTML document
 document.body.appendChild(app.view);
 
@@ -48,6 +51,9 @@ var cloudSpeed, cloudNum;
 
 //container to hold clouds
 var cloudContainer = new PIXI.Container();
+
+//the garden panel to see previous flowers
+var gardenPanelObj;
 
 //Load images
 loader
@@ -72,8 +78,14 @@ loader
     .add('petals5', "assets/petals5.png")
     .add('petals6', "assets/petals6.png")
     .add('petals7', "assets/petals7.png")
+    .add('gardenBtn', "assets/gardenBtn.png")
+    .add('closeBtn', 'assets/closeBtn.png')
+    .add('leftBtn', 'assets/leftBtn.png')
+    .add('rightBtn', 'assets/rightBtn.png')
+    .add('gardenPanel', 'assets/gardenPanel.png')
     .add("persJSON", "https://api.mlab.com/api/1/databases/dat602/collections/Personality?apiKey=zQ7SEYq_OxfzvDkJvF_DRW2HIPhPFv9i")
     .add("activeFlowerJSON", "https://api.mlab.com/api/1/databases/dat602/collections/ActiveFlower?apiKey=zQ7SEYq_OxfzvDkJvF_DRW2HIPhPFv9i")
+    .add('previousFlowersJSON', "https://api.mlab.com/api/1/databases/dat602/collections/Flowers?apiKey=zQ7SEYq_OxfzvDkJvF_DRW2HIPhPFv9i")
     .load(setup);
 
 function setup(){
@@ -98,7 +110,7 @@ function setup(){
         fontFamily: 'Arial',
         fontSize: 26,
         fontWeight: 'bold',
-        fill: '#ffffff', // gradient
+        fill: '#ffffff', 
         stroke: '#000000',
         strokeThickness: 3,
         wordWrap: true,
@@ -114,6 +126,7 @@ function setup(){
     
     //create a container to hold the sprites
     app.stage.addChild(spriteContainer);
+    app.stage.addChild(btnContainer);
     
     //CREATE GROUND
     //create a sprite from the ground image
@@ -143,12 +156,16 @@ function setup(){
     
     //add cloud container to sprite container
     spriteContainer.addChild(cloudContainer);
+    spriteContainer.setChildIndex(cloudContainer, 1);
     
     //create the first clouds
     for(var i = 0; i < (cloudNum / 2); i++){
     clouds.push(new Cloud(cloudContainer, true));
     }
-
+    
+    gardenPanelObj = new gardenPanel();
+    
+    createButtons(btnContainer);
 
     
     //start the gameloop
@@ -370,4 +387,142 @@ function Cloud(parent, first){
     parent.addChild(cloudSprite);
     //parent.setChildIndex(cloudSprite, 0);
     
+}
+
+function createButtons(parent){
+    
+    //create garden button
+    let gardenBtnSprite = new Sprite(loader.resources.gardenBtn.texture);
+    gardenBtnSprite.anchor.set(0.5);
+    gardenBtnSprite.position.set(45, 45);
+    gardenBtnSprite.interactive = true;
+    gardenBtnSprite.on('pointerdown', function(e){
+        gardenPanelObj.show();
+    });
+    parent.addChild(gardenBtnSprite);
+    
+    
+    
+}
+
+function gardenPanel(){
+    
+    //create and position sprite off screen
+    this.sprite = new Sprite(loader.resources.gardenPanel.texture);
+    this.sprite.anchor.set(0.5);
+    this.sprite.position.set(-1000, -1000);
+    this.currentPage = 0;
+    this.pageCount = 0;
+    app.stage.addChild(this.sprite);
+    
+    //populate panel with flowers using info from database
+    //console.log(JSON.parse(loader.resources.previousFlowersJSON.data));
+    let flowerData = JSON.parse(loader.resources.previousFlowersJSON.data);
+    let oldFlowerCont = new PIXI.Container();
+    oldFlowerCont.x = -170; 
+    oldFlowerCont.y = -250;
+    this.sprite.addChild(oldFlowerCont);
+    var timeStampStyle = new PIXI.TextStyle({
+        align: 'center',
+        fill:0xFFFFFF,
+        fontWeight: 'bold',
+        fontSize: 30,
+        dropShadow: true,
+        dropShadowAlpha: 0.5,
+        dropShadowDistance: 3,
+        wordWrap: true,
+        wordWrapWidth: 200
+    });
+    
+    var count = 0;
+    var page = 0;
+    for(var i = flowerData.length - 1; i >= 0; i--){
+        if(count === 9){
+            page++;
+            this.pageCount++;
+            count = 0;
+        }
+        let petalString = "petals" + flowerData[i].petals;
+        let flower = new Sprite(loader.resources[petalString].texture);
+        flower.anchor.set(0.5);
+        flower.tint = flowerData[i].color;
+        flower.scale.set(0.5);
+        let flowerCenter = new Sprite(loader.resources.flowerCenter.texture);
+        flowerCenter.anchor.set(0.5);
+        flowerCenter.scale.set(0.6);
+        
+
+        timeStamp = new text(flowerData[i].timestamp, timeStampStyle);
+        timeStamp.anchor.set(0.5);
+        timeStamp.y = 180;
+        flower.addChild(flowerCenter);
+        flower.addChild(timeStamp);
+        oldFlowerCont.addChild(flower);
+        flower.x = ((count % 3) * 170) + page * 600 ;
+        flower.y = Math.floor(count / 3) * 200;
+        count ++;
+        
+    }
+    
+    //create page count text
+    this.pageCountText = new text('Page ' + (this.currentPage + 1) + " of " + (this.pageCount + 1), timeStampStyle);
+    this.pageCountText.anchor.set(0.5);
+    this.pageCountText.scale.set(0.5);
+    this.pageCountText.x = 200;
+    this.pageCountText.y = -357;
+    this.sprite.addChild(this.pageCountText);
+    
+    //create close button
+    this.closeSprite = new Sprite(loader.resources.closeBtn.texture);
+    this.closeSprite.anchor.set(0.5);
+    this.closeSprite.y = 335;
+    this.sprite.addChild(this.closeSprite);
+    this.closeSprite.interactive = true;
+    this.closeSprite.on('pointerdown', function(e) {
+        gardenPanelObj.hide();
+    });
+    
+    // create page left button
+    this.pageLeftSprite = new Sprite(loader.resources.leftBtn.texture);
+    this.pageLeftSprite.anchor.set(0.5);
+    this.pageLeftSprite.y = 335;
+    this.pageLeftSprite.x = -167;
+    this.sprite.addChild(this.pageLeftSprite);
+    this.pageLeftSprite.interactive = true;
+    this.pageLeftSprite.on('pointerdown', function(e) {
+        if(gardenPanelObj.currentPage != 0){
+            oldFlowerCont.x += 600;
+            gardenPanelObj.currentPage -= 1;
+            gardenPanelObj.pageCountText.text = 'Page ' + (gardenPanelObj.currentPage + 1) + " of " + (gardenPanelObj.pageCount + 1);
+        }
+    });
+    
+    // create page right button
+    this.pageRightSprite = new Sprite(loader.resources.rightBtn.texture);
+    this.pageRightSprite.anchor.set(0.5);
+    this.pageRightSprite.y = 335;
+    this.pageRightSprite.x = 167;
+    this.sprite.addChild(this.pageRightSprite);
+    this.pageRightSprite.interactive = true;
+    this.pageRightSprite.on('pointerdown', function(e) {
+        if(gardenPanelObj.currentPage < gardenPanelObj.pageCount){
+            oldFlowerCont.x -= 600;
+            gardenPanelObj.currentPage += 1;
+            gardenPanelObj.pageCountText.text = 'Page ' + (gardenPanelObj.currentPage + 1) + " of " + (gardenPanelObj.pageCount + 1);
+        }
+
+    });
+    
+    
+    this.show = function(){
+        //move the panel into the screen view
+        this.sprite.x = canvWidth / 2;
+        this.sprite.y = canvHeight / 2;
+    }
+    
+    this.hide = function(){
+        //move the panel out of the screen view
+        this.sprite.x = -1000;
+        this.sprite.y = -1000;
+    }
 }

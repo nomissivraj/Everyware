@@ -33,7 +33,7 @@ function Flower(color, petals, currentScore, oldScore, active, parent){
         
         flowerSprite = new Sprite(loader.resources[this.state].texture);
         flowerSprite.anchor.set(0.5, 1);
-        flowerSprite.position.set(canvWidth * 0.5, canvHeight * 0.84);
+        flowerSprite.position.set(canvWidth * 0.8, canvHeight * 0.84);
         if(this.currentScore >= 100){
             
             //draw the petals and tint

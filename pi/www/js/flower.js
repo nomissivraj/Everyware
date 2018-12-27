@@ -8,13 +8,13 @@ function Flower(color, petals, currentScore, oldScore, active, parent){
     if(active){
         if(currentScore <= 20){
             this.state = "flower0";
-        } else if(this.currentScore <= 50){
+        } else if(this.currentScore <= 40){
             if(this.health >= 0){
                 this.state = "flower1";
             } else {
                 this.state = "illflower1";
             }
-        } else if(this.currentScore <= 70){
+        } else if(this.currentScore <= 60){
             if(this.health >= 0){
                 this.state = "flower2";
             } else {
@@ -54,6 +54,16 @@ function Flower(color, petals, currentScore, oldScore, active, parent){
         flowerSprite.scale.set(0.8);
         parent.addChild(flowerSprite);
         
+        
+        
+    }
+    
+    else if(!active) {
+        let petalString = "petals" + this.petals;
+        let petalSprite = new Sprite(loader.resources[petalString].texture);
+        petalSprite.anchor.set(0.5);
+        petalSprite.tint = this.color;
+        parent.addChild(petalSprite);
         
         
     }

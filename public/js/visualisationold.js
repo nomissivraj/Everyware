@@ -31,9 +31,6 @@ var clouds = [];
 //Container to hold all sprites
 var spriteContainer = new PIXI.Container();
 
-//Container to hold buttons
-var btnContainer = new PIXI.Container();
-
 //Add the canvas to the HTML document
 document.body.appendChild(app.view);
 
@@ -51,14 +48,6 @@ var cloudSpeed, cloudNum;
 
 //container to hold clouds
 var cloudContainer = new PIXI.Container();
-
-//the garden panel to see previous flowers
-var gardenPanelObj;
-
-//resize canvas on window resize
-window.addEventListener("resize", function() {
-  app.renderer.resize(window.innerWidth, window.innerHeight);
-});
 
 //Load images
 loader
@@ -83,16 +72,12 @@ loader
     .add('petals5', "assets/petals5.png")
     .add('petals6', "assets/petals6.png")
     .add('petals7', "assets/petals7.png")
-    .add('gardenBtn', "assets/gardenBtn.png")
-    .add('closeBtn', 'assets/closeBtn.png')
-    .add('gardenPanel', 'assets/gardenPanel.png')
     .add("persJSON", "https://api.mlab.com/api/1/databases/dat602/collections/Personality?apiKey=zQ7SEYq_OxfzvDkJvF_DRW2HIPhPFv9i")
     .add("activeFlowerJSON", "https://api.mlab.com/api/1/databases/dat602/collections/ActiveFlower?apiKey=zQ7SEYq_OxfzvDkJvF_DRW2HIPhPFv9i")
-    .add('previousFlowersJSON', "https://api.mlab.com/api/1/databases/dat602/collections/Flowers?apiKey=zQ7SEYq_OxfzvDkJvF_DRW2HIPhPFv9i")
     .load(setup);
 
 function setup(){
-    
+    console.log("gello");
     
     //array of petal colors
     petalColors = [
@@ -113,7 +98,7 @@ function setup(){
         fontFamily: 'Arial',
         fontSize: 26,
         fontWeight: 'bold',
-        fill: '#ffffff', 
+        fill: '#ffffff', // gradient
         stroke: '#000000',
         strokeThickness: 3,
         wordWrap: true,
@@ -129,7 +114,6 @@ function setup(){
     
     //create a container to hold the sprites
     app.stage.addChild(spriteContainer);
-    //app.stage.addChild(btnContainer);
     
     //CREATE GROUND
     //create a sprite from the ground image
@@ -159,16 +143,12 @@ function setup(){
     
     //add cloud container to sprite container
     spriteContainer.addChild(cloudContainer);
-    spriteContainer.setChildIndex(cloudContainer, 1);
     
     //create the first clouds
     for(var i = 0; i < (cloudNum / 2); i++){
     clouds.push(new Cloud(cloudContainer, true));
     }
-    
-    //gardenPanelObj = new gardenPanel();
-    
-    //createButtons(btnContainer);
+
 
     
     //start the gameloop
@@ -201,26 +181,26 @@ function parsePersonality(data){
 function setupActiveFlower(data){
     activeFlowerJSON = JSON.parse(data);
     if(activeFlowerJSON.length == 0){
-/*        flowerPlanted = false;
+        flowerPlanted = false;
         noFlowerText = new text('No flower planted! Tap the screen to plant!', style);
         noFlowerText.anchor.set(0.5);
         noFlowerText.x = canvWidth / 2;
         noFlowerText.y = canvHeight * 0.95;
-        spriteContainer.addChild(noFlowerText);*/
+        spriteContainer.addChild(noFlowerText);
         
     } else {
         flowerPlanted = true;
         let color = activeFlowerJSON[0].color;
         let petals = activeFlowerJSON[0].petals;
         let currentScore = activeFlowerJSON[0].currentFlowerScore;
-/*        if(currentScore >= 100){
+        if(currentScore >= 100){
             flowerComplete = true;
             flowerCompleteText = new text('Flower Complete! Tap to save and plant a new seed.', style);
                 flowerCompleteText.anchor.set(0.5);
                 flowerCompleteText.x = canvWidth / 2;
                 flowerCompleteText.y = canvHeight * 0.95;
                 spriteContainer.addChild(flowerCompleteText);
-        }*/
+        }
         let oldScore = activeFlowerJSON[0].oldFlowerScore;
         activeFlower = new Flower(color, petals, currentScore, oldScore, true, spriteContainer);
     }
@@ -299,9 +279,9 @@ function createRainbow(parent)
     );
     //position and scale sprite
     rainbowSprite.anchor.set(0.5);
-    rainbowSprite.rotation = 0;
-    rainbowSprite.position.set(canvWidth*0.9, canvHeight* 0.60);
-    rainbowSprite.scale.set(0.6);
+    rainbowSprite.rotation = -0.5;
+    rainbowSprite.position.set(canvWidth*0.65, canvHeight* 0.75);
+    rainbowSprite.scale.set(1);
     
     //set alpha of rainbow to match extraversion score
     //any score below 50 gives a alpha of 0, 50 - 100 scales from 0 to 1 alpha
@@ -389,86 +369,4 @@ function Cloud(parent, first){
     //add to stage
     parent.addChild(cloudSprite);
     //parent.setChildIndex(cloudSprite, 0);
-    
-}
-
-function createButtons(parent){
-    
-    //create garden button
-    let gardenBtnSprite = new Sprite(loader.resources.gardenBtn.texture);
-    gardenBtnSprite.anchor.set(0.5);
-    gardenBtnSprite.position.set(45, 45);
-    gardenBtnSprite.interactive = true;
-    gardenBtnSprite.on('pointerdown', function(e){
-        gardenPanelObj.show();
-    });
-    parent.addChild(gardenBtnSprite);
-    
-    
-    
-}
-
-function gardenPanel(){
-    
-    //create and position sprite off screen
-    this.sprite = new Sprite(loader.resources.gardenPanel.texture);
-    this.sprite.anchor.set(0.5);
-    this.sprite.position.set(canvWidth / 2, canvHeight / 2);
-    app.stage.addChild(this.sprite);
-    
-    //populate panel with flowers using info from database
-    //console.log(JSON.parse(loader.resources.previousFlowersJSON.data));
-    let flowerData = JSON.parse(loader.resources.previousFlowersJSON.data);
-    let oldFlowerCont = new PIXI.Container();
-    oldFlowerCont.x = -170; 
-    oldFlowerCont.y = -230;
-    this.sprite.addChild(oldFlowerCont);
-    var timeStampStyle = new PIXI.TextStyle({
-            fill:0xFFFFFF,
-            fontWeight: 'bold'
-    });
-    
-    for(var i = 0; i < flowerData.length; i++){
-        let petalString = "petals" + flowerData[i].petals;
-        let flower = new Sprite(loader.resources[petalString].texture);
-        flower.anchor.set(0.5);
-        flower.tint = flowerData[i].color;
-        flower.scale.set(0.5);
-        let flowerCenter = new Sprite(loader.resources.flowerCenter.texture);
-        flowerCenter.anchor.set(0.5);
-        flowerCenter.scale.set(0.6);
-
-        timeStamp = new text(flowerData[i].timestamp, timeStampStyle);
-        timeStamp.anchor.set(0.5);
-        timeStamp.y = 170;
-        flower.addChild(flowerCenter);
-        flower.addChild(timeStamp);
-        oldFlowerCont.addChild(flower);
-        flower.x = (i % 3) * 170;
-        flower.y = Math.floor(i / 3) * 200;
-        
-    }
-    
-    
-    this.closeSprite = new Sprite(loader.resources.closeBtn.texture);
-    this.closeSprite.anchor.set(0.5);
-    this.closeSprite.y = 360;
-    this.sprite.addChild(this.closeSprite);
-    this.closeSprite.interactive = true;
-    this.closeSprite.on('pointerdown', function(e) {
-        gardenPanelObj.hide();
-    });
-    
-    
-    this.show = function(){
-        //move the panel into the screen view
-        this.sprite.x = canvWidth / 2;
-        this.sprite.y = canvHeight / 2;
-    }
-    
-    this.hide = function(){
-        //move the panel out of the screen view
-        this.sprite.x = -1000;
-        this.sprite.y = -1000;
-    }
 }

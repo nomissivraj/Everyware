@@ -42,7 +42,8 @@ exports.PushtoMongoReplaceNewFlower = function(colName, data){
                 //save old active flower data in object
                 var flowerData = {
                     color: result[0].color,
-                    petals: result[0].petals
+                    petals: result[0].petals,
+                    timestamp: timeStamp()
                 }
                 dbo.collection('Flowers').insertOne(flowerData, (err, res) => { //add old flower data to collection
                     if (err) throw err;
@@ -60,5 +61,12 @@ exports.PushtoMongoReplaceNewFlower = function(colName, data){
         });   
     });
 
+}
+
+function timeStamp() {
+    var date = new Date().toLocaleDateString();
+    var time = new Date().toLocaleTimeString();
+    var timeStamp = date + " " + time;
+    return timeStamp;
 }
 
