@@ -3,7 +3,6 @@ function menuAnimation() {
     var page = document.getElementsByTagName('main')[0];
     var pageStyles = page.currentStyle || window.getComputedStyle(page);
     var curLeftMargin = parseInt(pageStyles.marginLeft);
-    console.log(curLeftMargin);
     
     menu.addEventListener('mouseover', () => {
         page.style.marginLeft = curLeftMargin + 117 + "px";
