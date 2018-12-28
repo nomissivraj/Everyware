@@ -12,5 +12,15 @@ function menuAnimation() {
         page.style.marginLeft = curLeftMargin + "px";
         menu.classList.remove('header--open');
     });
+}
 
+var loop;
+
+function refreshResize() {
+    window.addEventListener('resize', () => {
+        clearTimeout(loop);
+            loop = setTimeout(() => {
+            location.reload();
+        }, 250)
+    });
 }
