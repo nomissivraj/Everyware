@@ -79,10 +79,13 @@ loader
     .add('petals6', "assets/petals6.png")
     .add('petals7', "assets/petals7.png")
     .add('gardenBtn', "assets/gardenBtn.png")
+    .add('infoBtn', "assets/infoBtn.png")
     .add('closeBtn', 'assets/closeBtn.png')
     .add('leftBtn', 'assets/leftBtn.png')
     .add('rightBtn', 'assets/rightBtn.png')
     .add('gardenPanel', 'assets/gardenPanel.png')
+    .add('timeStampBack', 'assets/timeStampBack.png')
+    .add('infoPanel', 'assets/infoPanel.png')
     .add("persJSON", "https://api.mlab.com/api/1/databases/dat602/collections/Personality?apiKey=zQ7SEYq_OxfzvDkJvF_DRW2HIPhPFv9i")
     .add("activeFlowerJSON", "https://api.mlab.com/api/1/databases/dat602/collections/ActiveFlower?apiKey=zQ7SEYq_OxfzvDkJvF_DRW2HIPhPFv9i")
     .add('previousFlowersJSON', "https://api.mlab.com/api/1/databases/dat602/collections/Flowers?apiKey=zQ7SEYq_OxfzvDkJvF_DRW2HIPhPFv9i")
@@ -163,7 +166,9 @@ function setup(){
     clouds.push(new Cloud(cloudContainer, true));
     }
     
+    //create the panel objects
     gardenPanelObj = new gardenPanel();
+    infoPanelObj = new infoPanel();
     
     createButtons(btnContainer);
 
@@ -397,10 +402,25 @@ function createButtons(parent){
     gardenBtnSprite.position.set(45, 45);
     gardenBtnSprite.interactive = true;
     gardenBtnSprite.on('pointerdown', function(e){
+        if(infoPanelObj.onScreen){
+            infoPanelObj.hide();
+        }
         gardenPanelObj.show();
     });
     parent.addChild(gardenBtnSprite);
     
+    //create info button
+    let infoBtnSprite = new Sprite(loader.resources.infoBtn.texture);
+    infoBtnSprite.anchor.set(0.5);
+    infoBtnSprite.position.set(125, 45);
+    infoBtnSprite.interactive = true;
+    infoBtnSprite.on('pointerdown', function(e){
+        if(gardenPanelObj.onScreen){
+            gardenPanelObj.hide();
+        }
+        infoPanelObj.show();
+    });
+    parent.addChild(infoBtnSprite);    
     
     
 }
@@ -413,6 +433,7 @@ function gardenPanel(){
     this.sprite.position.set(-1000, -1000);
     this.currentPage = 0;
     this.pageCount = 0;
+    this.onScreen = false;
     app.stage.addChild(this.sprite);
     
     //populate panel with flowers using info from database
@@ -427,7 +448,7 @@ function gardenPanel(){
         fill:0xFFFFFF,
         fontWeight: 'bold',
         fontSize: 30,
-        dropShadow: true,
+        dropShadow: false,
         dropShadowAlpha: 0.5,
         dropShadowDistance: 3,
         wordWrap: true,
@@ -451,11 +472,20 @@ function gardenPanel(){
         flowerCenter.anchor.set(0.5);
         flowerCenter.scale.set(0.6);
         
-
-        timeStamp = new text(flowerData[i].timestamp, timeStampStyle);
+        let timeStampBackSprite = new Sprite(loader.resources.timeStampBack.texture);
+        timeStampBackSprite.anchor.set(0.5);
+        timeStampBackSprite.scale.set(2);
+        timeStampBackSprite.y = 178;
+        
+        
+        let tempTime = flowerData[i].timestamp;
+        let timeArray = tempTime.split(' ');
+        console.log(timeArray);
+        let timeStamp = new text(timeArray[0], timeStampStyle);
         timeStamp.anchor.set(0.5);
         timeStamp.y = 180;
         flower.addChild(flowerCenter);
+        flower.addChild(timeStampBackSprite);
         flower.addChild(timeStamp);
         oldFlowerCont.addChild(flower);
         flower.x = ((count % 3) * 170) + page * 600 ;
@@ -516,12 +546,75 @@ function gardenPanel(){
     
     this.show = function(){
         //move the panel into the screen view
+        this.onScreen = true;
         this.sprite.x = canvWidth / 2;
         this.sprite.y = canvHeight / 2;
     }
     
     this.hide = function(){
         //move the panel out of the screen view
+        this.onScreen = false;
+        this.sprite.x = -1000;
+        this.sprite.y = -1000;
+    }
+}
+
+function infoPanel(){
+    
+    //create and position sprite off screen
+    this.sprite = new Sprite(loader.resources.infoPanel.texture);
+    this.sprite.anchor.set(0.5);
+    this.sprite.position.set(-1000, -1000);
+    this.onScreen = false;
+    app.stage.addChild(this.sprite);
+    
+    this.scoreStyle = new PIXI.TextStyle({
+        align: 'center',
+        fill:0xF6851F,
+        fontWeight: 'bold',
+        fontSize: 30,
+    });
+    
+    //create close button
+    this.closeSprite = new Sprite(loader.resources.closeBtn.texture);
+    this.closeSprite.anchor.set(0.5);
+    this.closeSprite.y = 355;
+    this.sprite.addChild(this.closeSprite);
+    this.closeSprite.interactive = true;
+    this.closeSprite.on('pointerdown', function(e) {
+        infoPanelObj.hide();
+    });
+    
+    //create score text array.
+    let scoreArray = [
+        agreeablenessScore,
+        conscientiousnessScore,
+        opennessScore,
+        extraversionScore,
+        neuroticismScore
+    ];
+    //create and position score text sprites;
+    for(var i = 0; i < scoreArray.length; i++){
+            let scoreText = new text(scoreArray[i], this.scoreStyle);
+            scoreText.anchor.set(0.5);
+            scoreText.scale.set(0.6);
+            scoreText.position.set(48, 165 + (i * 32)); //165
+            this.sprite.addChild(scoreText);
+            
+    }
+    
+    
+    
+    this.show = function(){
+        //move the panel into the screen view
+        this.sprite.x = canvWidth / 2;
+        this.sprite.y = canvHeight / 2;
+        this.onScreen = true;
+    }
+    
+    this.hide = function(){
+        //move the panel out of the screen view
+        this.onScreen = false;
         this.sprite.x = -1000;
         this.sprite.y = -1000;
     }
