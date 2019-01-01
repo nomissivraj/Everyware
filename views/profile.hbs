@@ -1,46 +1,85 @@
 <h1>{{ title }}</h1>
 
 <div class="block block--user">
-    <div>Name: Simon</div>
-    <div>Age: 27</div>
-    <div>Gender: Male</div>
-    <div>Other: idk</div>
+    {{#if data.profile}}
+        {{#each data.profile}}
+            <div>Name: {{name}}</div>
+            <div>Age: {{age}}</div>
+            <div>Gender: {{gender}}</div>
+            <div>Hobbies: {{hobbies}}</div>
+        {{/each}}
+    {{else}}
+            <p>No user exists, please create one</p>
+            <form action="/action_page.php" method="POST">
+                Full name:<br>
+                <input type="text" name="fullname" value="" placeholder="Name here">
+                <br>
+                Date of Birth:<br>
+                <input type="date" name="DoB" value="">
+                <br>
+                Gender:<br>
+                <input type="text" name="gender" value="" placeholder="male/female">
+                <br><br>
+                Hobbies:<br>
+                <input type="text-area" name="hobbies" value="">
+                <br>
+                <input type="submit" value="Submit">
+            </form> 
+    {{/if}}
 </div>
+
 <div class="block block--diary-entry">
     <h2>Latest Diary Entry</h2>
-    <blockquote>Need to get last transcript entry for this area Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent luctus, sapien eu blandit auctor, enim urna volutpat leo, et laoreet est nulla nec nisl. Sed ut augue sit amet orci mollis dictum. Nam aliquam, odio at volutpat ullamcorper, justo eros efficitur elit, sit amet efficitur justo sapien nec magna. Nullam laoreet lectus vitae consequat bibendum. Maecenas at condimentum orci. Praesent enim erat, varius nec nibh non, vulputate commodo magna. Suspendisse nec iaculis velit. Integer fermentum turpis et nisi dictum tincidunt. Pellentesque a libero non purus ullamcorper posuere. Sed quis maximus odio.</blockquote>
+    {{#each data.diaryEntry}}
+        <blockquote>{{entry}}</blockquote>
+    {{/each}}
 </div>
 <div class="block block--tone">
     <h2>Tone</h2>
-    <p>get tone results here</p>
+    {{#if data.tone}}
+        {{#each data.tone}}
+            {{#if anger}}Anger{{anger}}%{{/if}}
+            {{#if fear}}Fear {{fear}}%{{/if}}
+            {{#if joy}}Joy {{joy}}%{{/if}}
+            {{#if sadness}}Sadness {{sadness}}%{{/if}}
+            {{#if analytical}}Analytical {{analytical}}%{{/if}}
+            {{#if confident}}Confident {{confident}}%{{/if}}
+            {{#if tentative}}Tentative {{tentative}}%{{/if}}
+        {{/each}}
+    {{else}}
+        No tone data yet, please create a diary entry
+    {{/if}}
 </div>
 <div class="block block--sentiment">
     <h2>Sentiment</h2>
-    <p>get tone results here</p>
+    <p>get sentiment results here</p>
 </div>
 <div class="block block--personality">
     
     <h2>Personality Insights</h2>
-    <div class="personality__block--container">
-        <div class="personality__block personality__block--openness">
-            <h3>Openness:</h3>
-            <p>{{recentData.big5_openness}}%</p>
+    {{#each data.personality}}
+        <div class="personality__block--container">
+                <div class="personality__block personality__block--openness">
+                    <h3>Openness:</h3>
+                    <p>{{big5_openness}}%</p>
+                </div>
+                <div class="personality__block personality__block--conscientiousness">
+                    <h3>Conscientiousness:</h3>
+                    <p>{{big5_conscientiousness}}%</p>
+                </div>
+                <div class="personality__block personality__block--extraversion">
+                    <h3>Extraversion:</h3>
+                    <p>{{big5_extraversion}}%</p>
+                </div>
+                <div class="personality__block personality__block--agreeableness">
+                    <h3>Agreableness:</h3>
+                    <p>{{big5_agreeableness}}%</p>
+                </div>
+                <div class="personality__block personality__block--neuroticism">
+                    <h3>Neuroticism:</h3>
+                    <p>{{big5_neuroticism}}%</p>
+                </div>
         </div>
-        <div class="personality__block personality__block--conscientiousness">
-            <h3>Conscientiousness:</h3>
-            <p>{{recentData.big5_conscientiousness}}%</p>
-        </div>
-        <div class="personality__block personality__block--extraversion">
-            <h3>Extraversion:</h3>
-            <p>{{recentData.big5_extraversion}}%</p>
-        </div>
-        <div class="personality__block personality__block--agreeableness">
-            <h3>Agreableness:</h3>
-            <p>{{recentData.big5_agreeableness}}%</p>
-        </div>
-        <div class="personality__block personality__block--neuroticism">
-            <h3>Neuroticism:</h3>
-            <p>{{recentData.big5_neuroticism}}%</p>
-        </div>
-    </div>
+    {{/each}}
+
 </div>
