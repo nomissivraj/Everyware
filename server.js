@@ -40,21 +40,50 @@ app.get('/', (req, res, next) => {
 
 app.get('/profile', (req, res) => {
     //refering to the function in getMongoD.js - use promise to retrive recent data only when promise is fullfilled
+    var personality = getMongoD.getEntries('dat602', 'Personality', 1);
+    var diaryEntry = getMongoD.getEntries('dat602', 'DiaryEntries', 1);
+    var profile = getMongoD.getEntries('dat602', 'Profile', 1);
+    var tone = getMongoD.getEntries('dat602', 'Tone', 1);
+
     //Only when promise is fulfulled will the page render happen. MIGHT NEED TO TEST WHAT HAPPENS IF NO DATA EXISTS?
-    getMongoD.getEntries('dat602', 'Personality', 1).then((recentData) => {
-        recentData = recentData[0];//Since only one item and can't be looped need to select the first (only) object 
-        res.render('profile', { title: 'Profile', condition: false, recentData});
+    Promise.all([personality, diaryEntry, profile, tone]).then((collections) => {
+        var data = {
+            "personality": collections[0],
+            "diaryEntry": collections[1],
+            "profile": collections[2],
+            "tone": collections[3]
+        }
+        res.render('profile', {title: 'Profile', data, condition: false})
     });
 });
 
 app.get('/history', (req, res) => {
-    getMongoD.getEntries('dat602', 'Personality', 31).then((recentData) => {
-        res.render('history', { title: 'History', condition: false, recentData});
+    var personality = getMongoD.getEntries('dat602', 'Personality', 31);
+    var diaryEntries = getMongoD.getEntries('dat602', 'DiaryEntries', 31);
+
+    Promise.all([personality, diaryEntries]).then((collections) => {
+        var data = {
+            "personality": collections[0],
+            "diaryEntry": collections[1],
+        }
+        res.render('history', { title: 'History', condition: false, data});
     });
 });
 
 app.get('/about', (req, res) => {
     res.render('about', { title: 'About', condition: false});
+});
+
+app.get('/test', (req, res) => {
+    
+
+    var collection1 = getMongoD.getEntries('dat602', 'Personality', 1);
+    var collection2 = getMongoD.getEntries('dat602', 'DiaryEntries', 1);
+    Promise.all([collection1, collection2]).then((values) => {
+        let collection1 = values[0];
+        let collection2 = values[1];
+        res.render('test', {title: 'Test', collection1, collection2, condition: false})
+    });
 });
 
 app.get('*', (req, res) => {
