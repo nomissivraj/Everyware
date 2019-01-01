@@ -253,16 +253,17 @@ article {
 
 .block--tone,
 .block--sentiment {
-    width: calc(50% - 40px);
+    width: calc(50% - 50px);
+    margin-right: 20px;
     background: rgba(221, 99, 0, 0.7);
+    border-radius: 5px;
 }
 .block--tone {
     padding-right: 20px;
-    border-radius: 5px 0 0 5px;
 }
 
 .block--sentiment {
-    border-radius: 0 5px 5px 0;
+    margin-right: 0;
 }
 
 .block--personality {
