@@ -1,0 +1,19 @@
+<h1>{{ title }}</h1>
+<p>On this page you can edit your profile information, as you can on the profile page itself. However you may also reset your account</p>
+<button class="editprofile-btn largebtn" onclick="edit(this)">Edit Profile Info</button>
+{{> profileform}}
+<button class="resetaccount-btn largebtn negative" onclick="resetAccount(this)">Reset Account</button>
+{{> resetform}}
+
+<script>
+    function edit(el) {
+        var editForm = document.getElementById('profileform');
+        editForm.style.display = "block";
+        el.style.display = "none";
+    }
+    function resetAccount(el) {
+        var resetForm = document.getElementById('resetform');
+        resetForm.style.display = "block";
+        el.style.display = "none";
+    }
+</script>
