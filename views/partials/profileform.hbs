@@ -1,0 +1,50 @@
+<form id="profileform" action="/profile-info" method="POST">
+<legend>Edit Profile Info</legend>
+    Full name:<br>
+    <input type="text" name="fullname" value="" placeholder="Full Name" required>
+    <br><br>
+    Date of Birth:<br>
+    <select type="select" name="month" value="" required>
+        <option value="jan" disabled selected hidden aria-hidden="true">Month</option>
+        <option value="1">Jan</option>
+        <option value="2">Feb</option>
+        <option value="3">Mar</option>
+        <option value="4">Apr</option>
+        <option value="5">May</option>
+        <option value="6">Jun</option>
+        <option value="7">Jul</option>
+        <option value="8">Aug</option>
+        <option value="9">Sept</option>
+        <option value="10">Oct</option>
+        <option value="11">Nov</option>
+        <option value="12">Dec</option>
+    </select>
+    <input type="number" name="day" value="" min="1" max="31" placeholder="Day (29)">
+    <input type="number" name="year" value=""
+    placeholder="Year (2000)" min="1900" max="2018" required>
+    <br><br>
+    Gender:<br>
+    <input type="radio" name="gender" value="male"> Male<br>
+    <input type="radio" name="gender" value="female"> Female<br>
+    <input type="radio" name="gender" value="other"> Other<br>  
+    <br><br>
+    Hobbies:<br>
+    <textarea type="text-area" name="hobbies" value=""></textarea>
+    <br><br>
+    <input class="halfbtn positive" type="submit" value="Submit"><button class="halfbtn caution" onclick="cancel(event, this)">cancel</button>
+</form> 
+<script>
+    function edit(el) {
+        var editForm = document.getElementById('profileform');
+        editForm.style.display = "block";
+        el.style.display = "none";
+    }
+    function cancel(e, el) {
+        e.preventDefault();
+        var editForm = document.getElementById('profileform');
+        var editBtn = document.getElementsByClassName('editprofile-btn')[0];
+        editForm.style.display = "none";
+        editBtn.style.display = "block";
+        this.display = "none";
+    }
+</script>
