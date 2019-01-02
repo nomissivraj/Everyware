@@ -11,7 +11,7 @@ var http = require('http').Server(app);
 
 
 //function to add item to database, takes in a collection name parameter and a document object
-exports.PushtoMongo = function(colName, data){
+exports.insert = function(colName, data){
 
     MongoClient.connect(url, (err, db) => {
         if (err) throw err; //throw error if can't connect
