@@ -1,0 +1,16 @@
+<form id="resetform" action="/reset-account" method="POST">
+    <legend>Reset Account</legend>
+    <div class="alert">
+        <span>Warning, resetting account will clear all data including profile information and all previous diary entries and analysis</span>
+    </div>
+    <input class="halfbtn positive" type="submit" value="Confirm Reset"><button type="button" class="halfbtn caution" onclick="cancelReset(this)">cancel</button>
+</form> 
+<script>
+    function cancelReset(el) {
+        var resetForm = document.getElementById('resetform');
+        var resetBtn = document.getElementsByClassName('resetaccount-btn')[0];
+        resetForm.style.display = "none";
+        resetBtn.style.display = "block";
+        this.display = "none";
+    }
+</script>
