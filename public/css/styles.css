@@ -50,7 +50,9 @@ Table of Contents:
         - Navigation
     - Main Page
     - History Table
-    - Footer 
+    - Footer
+    - Partials
+    - Media Queries 
 
 */
 
@@ -120,7 +122,7 @@ h1 {
     opacity: 0.4;
 }
 
-h2 {
+h2, legend {
     font-size: 1.75em;
     color: #444;
     padding: 0 0 20px 0;
@@ -145,6 +147,68 @@ p {
     width: 100%;
 }
 
+input[type="text"], textarea {
+    width: 100%;
+}
+
+textarea {
+    width: 100%;
+    min-height: 50px;
+    max-height: 200px;
+}
+
+button, input[type="submit"] {
+    border: 0;
+    border-radius: 5px;
+    cursor: pointer;
+    background-color: #555454;
+    color: #fff;
+}
+
+.largebtn {
+    display: block;
+    width: 100%;
+    max-width: 420px;
+    padding: 10px 20px;
+    margin: 20px 0;
+}
+.smallbtn {
+    display: block;
+    padding: 10px 20px;
+    margin: 20px 0;
+    min-width: 150px;
+}
+
+.halfbtn {
+    display: inline-block;
+    padding: 10px 20px;
+    margin-right: 10px;
+    width: calc(50% - 5px);
+}
+.halfbtn:last-child {
+    margin-right: 0;
+}
+.positive {
+    background-color: #47a947!important;
+    color: #444;
+}
+
+.caution {
+    background-color: #f5aa21!important;
+    color: #444;
+}
+
+.negative {
+    background-color: #e04a4a!important;
+}
+
+.alert {
+    background: rgba(255, 174, 174, 0.38)!important;
+    border: 3px solid #e04a4a;
+    padding: 20px;
+    margin: 0 0 20px 0;
+    color: #000;
+}
 /* Header */
 header {
     position: fixed;
@@ -341,10 +405,6 @@ article {
     border-right:0;
 }
 
-.col__data--value {
-
-}
-
 /* Footer */
 footer {
     position: fixed;
@@ -354,6 +414,20 @@ footer {
     text-align: center;
     margin-left: 83px;
 }
+
+/* Partials */
+#profileform, #resetform {
+    display: none;
+}
+form {
+    border-radius: 5px;
+    padding: 20px;
+    max-width: 420px;
+    background: rgba(170, 170, 170, 0.27);
+    border: 3px solid #b9b9b9;
+    margin-bottom: 20px;
+}
+/* Media Queries */
 
 @media (min-width:1080px){
     .personality__block:last-of-type {
