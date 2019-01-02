@@ -3,7 +3,10 @@ const WEB_PORT = 4000; //port for webserver to run on
 const express = require('express');
 const app = express();
 const getMongoD = require("./getMongoD"); // Serverside database calls for profile and history
+const pushMongo = require("./pushMongo");
 const hbs = require('express-handlebars'); // require handlebars
+const bodyParser = require('body-parser');
+const funcs = require('./funcs')
 
 // Seting up handlebars template engine and some defining some helper functions for this
 app.engine('hbs', hbs({
@@ -26,9 +29,8 @@ app.engine('hbs', hbs({
 app.set('view engine', 'hbs'); // setting view engine to handlebars
 const path = require('path');
 app.use(express.static(path.join(__dirname, '/public')));
+app.use(bodyParser.urlencoded({extended: true}));
 
-
-//var lastEntry = getMongoD.getLastEntry('dat602',"Personality");
 //Set up routes for front end
 app.listen(WEB_PORT, () => {
     console.log(`App Listening on Port: ${WEB_PORT}`); 
@@ -74,16 +76,30 @@ app.get('/about', (req, res) => {
     res.render('about', { title: 'About', condition: false});
 });
 
-app.get('/test', (req, res) => {
-    
+app.get('/settings', (req, res) => {
+    res.render('settings', { title: 'Settings', condition: false});
+});
 
-    var collection1 = getMongoD.getEntries('dat602', 'Personality', 1);
-    var collection2 = getMongoD.getEntries('dat602', 'DiaryEntries', 1);
-    Promise.all([collection1, collection2]).then((values) => {
-        let collection1 = values[0];
-        let collection2 = values[1];
-        res.render('test', {title: 'Test', collection1, collection2, condition: false})
-    });
+app.post('/profile-info', (req, res) => {
+    var month = req.body.month;
+    var day = req.body.day;
+    var year = req.body.year;
+    var dob = year+month+day;
+
+    var profileObj = {
+        "name" : req.body.fullname,
+        "age" :  funcs.parseAge(dob),
+        "gender" : req.body.gender,
+        "hobbies" : req.body.hobbies,
+    }
+    console.log(profileObj)
+    pushMongo.insert('Profile', profileObj)
+    res.redirect('/profile')    
+});
+
+app.post('/reset-account', (req, res) => {
+    console.log("RESET ACCOUNT");
+    res.redirect('/profile')    
 });
 
 app.get('*', (req, res) => {
