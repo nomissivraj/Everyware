@@ -1,5 +1,7 @@
 <h1>{{ title }}</h1>
 
+
+
 <div class="block block--user">
     {{#if data.profile}}
         {{#each data.profile}}
@@ -7,24 +9,14 @@
             <div>Age: {{age}}</div>
             <div>Gender: {{gender}}</div>
             <div>Hobbies: {{hobbies}}</div>
+
+            <button class="editprofile-btn smallbtn" onclick="edit(this)">Edit</button>
+            {{> profileform}}
         {{/each}}
     {{else}}
             <p>No user exists, please create one</p>
-            <form action="/action_page.php" method="POST">
-                Full name:<br>
-                <input type="text" name="fullname" value="" placeholder="Name here">
-                <br>
-                Date of Birth:<br>
-                <input type="date" name="DoB" value="">
-                <br>
-                Gender:<br>
-                <input type="text" name="gender" value="" placeholder="male/female">
-                <br><br>
-                Hobbies:<br>
-                <input type="text-area" name="hobbies" value="">
-                <br>
-                <input type="submit" value="Submit">
-            </form> 
+            <button class="editprofile-btn smallbtn" onclick="edit(this)">Create Profile</button>
+            {{> profileform}}
     {{/if}}
 </div>
 
