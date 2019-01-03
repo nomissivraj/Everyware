@@ -78,6 +78,10 @@ io.on("connection", (socket) => {
 
 		mongoDB.PushtoMongoReplaceNewFlower("ActiveFlower", data);
     });
+    
+    socket.on('fakeEntry', (data) => {
+        beginAnalysis(data);
+    });
 
 
 });

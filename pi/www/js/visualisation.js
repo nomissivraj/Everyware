@@ -55,6 +55,20 @@ var cloudContainer = new PIXI.Container();
 //the garden panel to see previous flowers
 var gardenPanelObj;
 
+//to track the DEBUG cheat code
+var debugCodeCount = 0;
+
+var dummyEntries = [
+    "Well, today wasn/’t half bad. Woke up after a lie in and made myself some cereal which was great. No one was home considering it was the weekend so I had a whole house to myself for most of the day. I just lounged around, watched TV, played games, and just generally wasted the day away. I guess it wasn/’t productive but sometimes you just need those lazy days. But anyways, my housemate came home later in the day and cooked a huge roast dinner for us and some friends we invited round – and he cooks a mean roast. That/’s basically the day really, nothing particularly interesting but it was enjoyable.",
+    "Hey diary, just wanted to say that I had one hell of a time at Thorpe Park with some mates today. Haven/’t been in there in a long time and I almost forgot just how much I love roller coasters. One of the guys wimped out though and didn/’t go on most of the rides but oh well, he tagged along for everything else at least. Only bad thing I can think of is the long and tiring car journey, but other than that it was all pretty good. Hopefully I can go to a theme park again, I definitely miss them.",
+    "Well, I/’m pretty sure I’m in trouble at work now. Some customer was being rude and just wouldn/’t accept anything apart from a full refund. Apparently taking down one item wrong on his order warrants a full refund. We offered a refund for the one pizza which was wrong and even said he could have it on the house as well as the correct pizza, but he was so demanding. I know I shouldn/’t have told him to /“Stop complaining about everything/” but he was just aggressive, and I wasn/’t going to just take it. The customer is not always right and I hate that people say they should be.",
+    "Dear diary, I got my grades back for my mock exams today and did brilliantly. Honestly didn/’t expect that since I hate the subject but I/’ll take it. Even my sciences were good despite them being my worst subjects. Thought I/’d get my best marks in History honestly but it was near enough. Hopefully I do just as well when the real exams come but until then I shouldn’t worry. At least I did better than David though, he/’s supposedly the smartest in the year group but I think a few people outperformed him. At least he isn/’t cocky about how smart he is though. Anyway that/’s about it, goodnight!",
+    "Had quite a lazy day today, it/’s a weekend so what can I say? Parent/’s weren/’t home either since they/’re visiting my sister at university so I/’m basically home alone until the evening. I literally woke up at 3 in the afternoon and just stayed in bed on my phone. Not exactly productive but I had no plans. Mum and Dad got home by like 7 anyways and apparently my sister/’s doing fine, still stroppy as normal so nothing new there. We ordered takeaway for dinner since it was late and then we just watched TV. Well, they did, I just sat in the armchair on my phone and barely watched the show they were watching.",
+    "So, today I had one of those days where for some reason everything just annoyed me. I think it started because my housemate doesn’t know how to make a damn cup of tea, I mean, how can you not!? It’s just water and tea – and milk if you want it. And does he have to spend over an hour in the shower. We have 1 toilet between the 3 of us and I just sat there waiting, holding in my bladder for an age. The supermarket was out of bread as well which sucked, but I wouldn’t have needed bread if Martin hadn/’t dropped the entire loaf on the floor. This is basically me just ranting at this point so I/’ll just stop. It/’s just frustrating is all.",
+    "I/’ve genuinely never been a rock fan, but I was convinced to attend a Fall Out Boy concert with a group of friends and wow it was great. I/’d never been to a concert before today and wow, the atmosphere and the people. So loud but so exciting. It probably would have helped if I knew their music but because I was invited quite last minute I barely had time to even look them up. There was one song though which I had heard before so I knew the chorus at least. Guess I should give the band a listen at some point, I guess rock isn’t too bad.",
+    "Actually can/’t believe my parents had a go at me for being /‘lazy/’ when my brother does literally nothing around the house. Just because it/’s exam season for him he gets a free pass. I do the dishes, I vacuum every inch of the house, take out the trash and replace the bin bags and when they tell me to put food into the dog/’s food bowl, apparently telling them to “wait a minute” isn/’t acceptable. Just be patient for goodness sake, I/’m not even refusing. I still did it in the end anyway but still, it/’s always me isn/’t it?"
+];
+
 //Load images
 loader
     .add("groundTex", "assets/ground.png")
@@ -80,12 +94,15 @@ loader
     .add('petals7', "assets/petals7.png")
     .add('gardenBtn', "assets/gardenBtn.png")
     .add('infoBtn', "assets/infoBtn.png")
+    .add('debugBtn', "assets/debugBtn.png")
+    .add('makeEntryBtn', "assets/makeEntryBtn.png")
     .add('closeBtn', 'assets/closeBtn.png')
     .add('leftBtn', 'assets/leftBtn.png')
     .add('rightBtn', 'assets/rightBtn.png')
     .add('gardenPanel', 'assets/gardenPanel.png')
     .add('timeStampBack', 'assets/timeStampBack.png')
     .add('infoPanel', 'assets/infoPanel.png')
+    .add('debugPanel', 'assets/debugPanel.png')
     .add("persJSON", "https://api.mlab.com/api/1/databases/dat602/collections/Personality?apiKey=zQ7SEYq_OxfzvDkJvF_DRW2HIPhPFv9i")
     .add("activeFlowerJSON", "https://api.mlab.com/api/1/databases/dat602/collections/ActiveFlower?apiKey=zQ7SEYq_OxfzvDkJvF_DRW2HIPhPFv9i")
     .add('previousFlowersJSON', "https://api.mlab.com/api/1/databases/dat602/collections/Flowers?apiKey=zQ7SEYq_OxfzvDkJvF_DRW2HIPhPFv9i")
@@ -169,8 +186,12 @@ function setup(){
     //create the panel objects
     gardenPanelObj = new gardenPanel();
     infoPanelObj = new infoPanel();
+    debugPanelObj = new debugPanel();
     
     createButtons(btnContainer);
+    
+    //add keydown event listener for debug mode
+    document.addEventListener('keydown', onKeyDown);
 
     
     //start the gameloop
@@ -192,12 +213,20 @@ function drawLoop(){
 
 function parsePersonality(data){
     parsedData = JSON.parse(data);
-    lastEntry = parsedData[parsedData.length - 1];
-    opennessScore = lastEntry.big5_openness;
-    conscientiousnessScore = lastEntry.big5_conscientiousness;
-    extraversionScore = lastEntry.big5_extraversion;
-    agreeablenessScore = lastEntry.big5_agreeableness;
-    neuroticismScore = lastEntry.big5_neuroticism;
+    if(parsedData.length > 0){
+        lastEntry = parsedData[parsedData.length - 1];
+        opennessScore = lastEntry.big5_openness;
+        conscientiousnessScore = lastEntry.big5_conscientiousness;
+        extraversionScore = lastEntry.big5_extraversion;
+        agreeablenessScore = lastEntry.big5_agreeableness;
+        neuroticismScore = lastEntry.big5_neuroticism;
+    } else {
+        opennessScore = 50;
+        conscientiousnessScore = 50;
+        extraversionScore = 50;
+        agreeablenessScore = 50;
+        neuroticismScore = 50;
+    }
 }
 
 function setupActiveFlower(data){
@@ -404,6 +433,8 @@ function createButtons(parent){
     gardenBtnSprite.on('pointerdown', function(e){
         if(infoPanelObj.onScreen){
             infoPanelObj.hide();
+        } else if(debugPanelObj.onScreen){
+            debugPanelObj.hide();
         }
         gardenPanelObj.show();
     });
@@ -417,6 +448,8 @@ function createButtons(parent){
     infoBtnSprite.on('pointerdown', function(e){
         if(gardenPanelObj.onScreen){
             gardenPanelObj.hide();
+        } else if(debugPanelObj.onScreen){
+            debugPanelObj.hide();
         }
         infoPanelObj.show();
     });
@@ -480,7 +513,6 @@ function gardenPanel(){
         
         let tempTime = flowerData[i].timestamp;
         let timeArray = tempTime.split(' ');
-        console.log(timeArray);
         let timeStamp = new text(timeArray[0], timeStampStyle);
         timeStamp.anchor.set(0.5);
         timeStamp.y = 180;
@@ -603,6 +635,98 @@ function infoPanel(){
             
     }
     
+    
+    
+    this.show = function(){
+        //move the panel into the screen view
+        this.sprite.x = canvWidth / 2;
+        this.sprite.y = canvHeight / 2;
+        this.onScreen = true;
+    }
+    
+    this.hide = function(){
+        //move the panel out of the screen view
+        this.onScreen = false;
+        this.sprite.x = -1000;
+        this.sprite.y = -1000;
+    }
+}
+
+//keydown function
+function onKeyDown(key){
+    
+    //check for user typing word "debug"
+    if(debugCodeCount === 0 && key.keyCode === 68){
+        debugCodeCount ++;
+    } else if(debugCodeCount === 1 && key.keyCode === 69){
+        debugCodeCount ++;
+    } else if(debugCodeCount === 2 && key.keyCode === 66){
+        debugCodeCount ++;
+    } else if(debugCodeCount === 3 && key.keyCode === 85){
+        debugCodeCount ++;
+    } else if(debugCodeCount === 4 && key.keyCode === 71){
+        console.log("debug mode activated");
+        debugMode(btnContainer);
+        
+    } else {
+        debugCodeCount = 0;
+    }
+}
+
+
+//debug mode
+
+function debugMode(parent){
+    
+
+    
+    //create debug button
+    let debugBtnSprite = new Sprite(loader.resources.debugBtn.texture);
+    debugBtnSprite.anchor.set(0.5);
+    debugBtnSprite.position.set(205, 45);
+    debugBtnSprite.interactive = true;
+    debugBtnSprite.on('pointerdown', function(e){
+        if(gardenPanelObj.onScreen){
+            gardenPanelObj.hide();
+        } else if( infoPanelObj.onScreen){
+            infoPanelObj.hide();
+        }
+        debugPanelObj.show();
+    });
+    parent.addChild(debugBtnSprite);  
+}
+
+function debugPanel(){
+    
+    //create and position sprite off screen
+    this.sprite = new Sprite(loader.resources.debugPanel.texture);
+    this.sprite.anchor.set(0.5);
+    this.sprite.position.set(-1000, -1000);
+    this.onScreen = false;
+    app.stage.addChild(this.sprite);
+    
+    //create entry button
+    this.entrySprite = new Sprite(loader.resources.makeEntryBtn.texture);
+    this.entrySprite.anchor.set(0.5);
+    this.entrySprite.y = 0;
+    this.sprite.addChild(this.entrySprite);
+    this.entrySprite.interactive = true;
+    this.entrySprite.on('pointerdown', function(e){
+        dummyEntryIndex = Math.floor(Math.random() * dummyEntries.length);
+        console.log("Inserted entry: " + dummyEntries[dummyEntryIndex]);
+        socket.emit('fakeEntry', dummyEntries[dummyEntryIndex]);
+    });
+        
+    //create close button
+    this.closeSprite = new Sprite(loader.resources.closeBtn.texture);
+    this.closeSprite.anchor.set(0.5);
+    this.closeSprite.y = 355;
+    this.sprite.addChild(this.closeSprite);
+    this.closeSprite.interactive = true;
+    this.closeSprite.on('pointerdown', function(e) {
+        debugPanelObj.hide();
+    });
+        
     
     
     this.show = function(){

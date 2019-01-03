@@ -63,6 +63,36 @@ exports.PushtoMongoReplaceNewFlower = function(colName, data){
 
 }
 
+exports.PushtoMongoGrowFlower = function(score){
+
+    MongoClient.connect(url, (err, db) => {
+        if (err) throw err; //throw error if can't connect
+        
+        var dbo = db.db('dat602');
+        console.log(score);
+        dbo.collection("ActiveFlower").find({}).toArray((err, result) => { //get active flower data
+            if (err) throw err;
+            if(result.length < 1) { //if it doesnt exist, return.
+                return;
+            } else {
+                //save old active flower data in object with updated score
+                var flowerData = {
+                    color: result[0].color,
+                    petals: result[0].petals,
+                    currentFlowerScore: result[0].currentFlowerScore + score,
+                    oldFlowerScore: result[0].currentFlowerScore
+                }
+                dbo.collection("ActiveFlower").replaceOne({ }, flowerData, {upsert: true}, (err, res) => { //create new flower data using passed in object
+                    if (err) throw err;
+                    db.close;
+                }); 
+            }
+            
+        });
+    });
+
+}
+
 function timeStamp() {
     var date = new Date().toLocaleDateString();
     var time = new Date().toLocaleTimeString();
