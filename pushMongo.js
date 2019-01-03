@@ -11,12 +11,12 @@ var http = require('http').Server(app);
 
 
 //function to add item to database, takes in a collection name parameter and a document object
-exports.insert = function(colName, data){
+exports.insert = function(dbname, colName, data) {
 
     MongoClient.connect(url, (err, db) => {
         if (err) throw err; //throw error if can't connect
         
-        var dbo = db.db('dat602');
+        var dbo = db.db(dbname);
                 
         dbo.collection(colName).insertOne(data, (err, res) => { //add document to collection using the passed in collection name
             if (err) throw err;
@@ -25,5 +25,35 @@ exports.insert = function(colName, data){
         });   
     });
 
+}
+
+exports.updateProfile = function(dbname, colName, data) {
+    MongoClient.connect(url, (err, db) => {
+        if (err) throw err; //throw error if can't connect
+        
+        var dbo = db.db(dbname);
+                
+        dbo.collection(colName).replaceOne(
+            {"docname": 'user'}, //where docname is user do following
+            {
+                $set: {
+                    "name" : "fuck",
+                },
+                $unset : {
+                    "docname": "",
+                    "name": "",
+                    "age": "",
+                    "gender": "",
+                    "hobbies": ""
+                }
+            }, 
+            
+            
+            (err, res) => { //add document to collection using the passed in collection name
+            if (err) throw err;
+            console.log('Profile updated');
+            db.close;
+        });   
+    });
 }
 
