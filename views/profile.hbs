@@ -1,17 +1,30 @@
 <h1>{{ title }}</h1>
 
-
-
 <div class="block block--user">
     {{#if data.profile}}
         {{#each data.profile}}
-            <div>Name: {{name}}</div>
-            <div>Age: {{age}}</div>
-            <div>Gender: {{gender}}</div>
-            <div>Hobbies: {{hobbies}}</div>
-
+            <div class="profile__item">
+                <span class="profile__label">Name: </span>
+                <span class="profile__value">{{name}}</span>
+            </div>
+            <div class="profile__item">
+                <span class="profile__label">Age:</span>
+                <span class="profile__value">{{age}}</span>
+            </div>
+            <div class="profile__item">
+                <span class="profile__label">Gender:</span>
+                <span class="profile__value">{{gender}}</span>
+            </div>
+            <div class="profile__item">
+                <span class="profile__label">Location:</span>
+                <span class="profile__value">{{location}}</span>
+            </div>
+            <div class="profile__item">
+                <span class="profile__label">Hobbies:</span>
+                <span class="profile__value">{{hobbies}}</span>
+            </div>
             <button class="editprofile-btn smallbtn" onclick="edit(this)">Edit</button>
-            {{> profileform}}
+            
         {{/each}}
     {{else}}
             <p>No user exists, please create one</p>
@@ -19,24 +32,63 @@
             {{> profileform}}
     {{/if}}
 </div>
+<div style="clear:both"></div>
+{{> profileform}}
 
 <div class="block block--diary-entry">
     <h2>Latest Diary Entry</h2>
     {{#each data.diaryEntry}}
-        <blockquote>{{entry}}</blockquote>
+        <blockquote>"{{entry}}"</blockquote>
     {{/each}}
 </div>
 <div class="block block--tone">
     <h2>Tone</h2>
     {{#if data.tone}}
         {{#each data.tone}}
-            {{#if anger}}Anger{{anger}}%{{/if}}
-            {{#if fear}}Fear {{fear}}%{{/if}}
-            {{#if joy}}Joy {{joy}}%{{/if}}
-            {{#if sadness}}Sadness {{sadness}}%{{/if}}
-            {{#if analytical}}Analytical {{analytical}}%{{/if}}
-            {{#if confident}}Confident {{confident}}%{{/if}}
-            {{#if tentative}}Tentative {{tentative}}%{{/if}}
+            <div class="tone__block--container">
+                {{#if anger}}
+                    <div class="tone__block tone__block--anger">
+                        <h3>Anger:</h3>
+                        <p>{{anger}}%</p>
+                    </div>
+                {{/if}}
+                {{#if fear}}
+                    <div class="tone__block tone__block--anger">
+                        <h3>Fear:</h3>
+                        <p>{{fear}}%</p>
+                    </div>
+                {{/if}}
+                {{#if joy}}
+                    <div class="tone__block tone__block--anger">
+                        <h3>Joy:</h3>
+                        <p>{{joy}}%</p>
+                    </div>
+                {{/if}}
+                {{#if sadness}}
+                    <div class="tone__block tone__block--anger">
+                        <h3>Sadness:</h3>
+                        <p>{{sadness}}%</p>
+                    </div>
+                {{/if}}
+                {{#if analytical}}
+                    <div class="tone__block tone__block--anger">
+                        <h3>Analytical</h3>
+                        <p>{{analytical}}%</p> 
+                    </div>
+                {{/if}}
+                {{#if confident}}
+                    <div class="tone__block tone__block--anger">
+                        <h3>Confident</h3>
+                        <p>{{confident}}%</p>
+                    </div>
+                {{/if}}
+                {{#if tentative}}
+                    <div class="tone__block tone__block--anger">
+                        <h3>Tentative</h3>
+                        <p>{{tentative}}%</p>
+                    </div>
+                {{/if}}
+            </div>
         {{/each}}
     {{else}}
         No tone data yet, please create a diary entry
@@ -49,8 +101,9 @@
 <div class="block block--personality">
     
     <h2>Personality Insights</h2>
-    {{#each data.personality}}
-        <div class="personality__block--container">
+    {{#if data.personality}}
+        {{#each data.personality}}
+            <div class="personality__block--container">
                 <div class="personality__block personality__block--openness">
                     <h3>Openness:</h3>
                     <p>{{big5_openness}}%</p>
@@ -71,7 +124,10 @@
                     <h3>Neuroticism:</h3>
                     <p>{{big5_neuroticism}}%</p>
                 </div>
-        </div>
-    {{/each}}
+            </div>
+        {{/each}}
+    {{else}}
+        No tone data yet, please create a diary entry
+    {{/if}}
 
 </div>
