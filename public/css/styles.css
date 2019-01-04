@@ -281,6 +281,11 @@ button, button[type="submit"] {
     color: #fff;
     margin-bottom: 0px;
     margin-top: 20px;
+    font-size: 1.2em;
+}
+
+button.editprofile-btn.smallbtn {
+    margin-bottom: 0;
 }
 
 .dob {
@@ -445,6 +450,10 @@ main {
     max-width: 1300px;
 }
 
+.block {
+    min-height: 180px;
+}
+
 .block,
 article {
     padding: 20px;
@@ -540,6 +549,7 @@ article {
     background: #fbfbfb;
     padding: 20px;
     width: calc(50% - 40px);
+    font-size: 1.25em;
 }
 
 .profile__item {
@@ -548,13 +558,11 @@ article {
 
 .profile__label {
     display: inline-block;
-    font-weight: bold;
     color: #444;
     min-width: 80px;
 }
 
 span.profile__value {
-    font-weight: bold;
     color: #dd6300;
     text-transform: capitalize;
 }
