@@ -62,12 +62,9 @@ app.get('/profile', (req, res) => {
 app.get('/history', (req, res) => {
     var personality = getMongoD.getEntries('dat602', 'Personality', 31);
     var diaryEntries = getMongoD.getEntries('dat602', 'DiaryEntries', 31);
-
-    Promise.all([personality, diaryEntries]).then((collections) => {
-        var data = {
-            "personality": collections[0],
-            "diaryEntry": collections[1],
-        }
+    var tone = getMongoD.getEntries('dat602', 'Tone', 31);
+    Promise.all([personality, diaryEntries, tone]).then((collections) => {           
+        data = funcs.mergeCollections(collections);
         res.render('history', { title: 'History', condition: false, data});
     });
 });
@@ -90,10 +87,10 @@ app.post('/profile-info', (req, res) => {
         "name" : req.body.fullname,
         "age" :  funcs.parseAge(dob),
         "gender" : req.body.gender,
-        "hobbies" : req.body.hobbies,
+        "location" : req.body.location,
+        "hobbies" : req.body.hobbies
     }
-    console.log(profileObj)
-    pushMongo.insert('Profile', profileObj)
+    pushMongo.updateProfile('dat602', 'Profile', profileObj)
     res.redirect('/profile')    
 });
 
