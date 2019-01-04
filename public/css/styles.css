@@ -706,10 +706,15 @@ footer {
 form {
     border-radius: 5px;
     padding: 20px;
-    max-width: calc(50% - 45px);
+    width: calc(50% - 45px);
+    max-width: 100%;
     background: rgba(170, 170, 170, 0.27);
     border: 3px solid #b9b9b9;
     margin-bottom: 20px;
+}
+
+.block--user form {
+    width: calc(100% - 45px);
 }
 /* Media Queries */
 
