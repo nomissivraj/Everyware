@@ -57,6 +57,10 @@ Table of Contents:
 */
 
 /* CORE */
+:focus {
+    outline: 2px solid rgb(235, 118, 22);
+}
+
 html {
     height: 100%;
 }
@@ -129,9 +133,15 @@ h2, legend {
 }
 
 h3 {
-    font-size: 1.25em;
+    font-size: 1.45em;
     color: #444;
     padding: 0 0 20px 0;
+}
+
+h4 {
+    font-size: 1.25em;
+    color: #fff;
+    text-transform: uppercase;
 }
 
 a {
@@ -142,14 +152,32 @@ p {
     padding: 10px 0;
 }
 
+main ul li {
+    list-style-type: disc;
+    margin-left: 40px;
+}
+
+nav ul li {
+    list-style-type: none;
+}
+
+article p, article ul li {
+    font-size: 1.2em;
+    color: #555;
+}
+
+article ul li {
+    padding-bottom: 10px;
+}
+
 img {
     max-width: 100%;
 }
 
 blockquote {
-    font-weight: bold;
-    color: #555;
-    padding: 20px;
+    font-size: 1.2em;
+    color: #333;
+    padding: 40px;
     font-style: italic;
     background: #e0e0e0;
     text-align: center;
@@ -264,10 +292,10 @@ button span, button[type="submit"] span {
     z-index: 1;
 }
 
-button:hover::before,
-button[type="submit"]:hover::before,
-button:focus::before,
-button[type="submit"]:focus::before {
+button:not(.accordion):hover::before,
+button[type="submit"]:not(.accordion):hover::before,
+button:not(.accordion):focus::before,
+button[type="submit"]:not(.accordion):focus::before {
     content: "";
     display: block;
     position: absolute;
@@ -487,6 +515,11 @@ article {
 .block--team h3 {
     margin-top: 20px;
     color: #fff;
+    text-transform: uppercase;
+}
+
+.block--team p {
+    color: #333;
 }
 
 .block--team:last-of-type {
@@ -532,7 +565,7 @@ span.profile__value {
 
 
 /* History Page */
-.row {
+.datablock {
     width: 100%;
     overflow: hidden;
     margin: 10px 0 30px 0;
@@ -545,9 +578,34 @@ span.profile__value {
     padding: 20px 10px;
 }
 
-.row .col {
+.dataset {
+    margin-bottom: 30px;
+    overflow: hidden;
+    border-bottom: 2px solid #dd8846;
+}
+
+.dataset:last-child {
+    margin-bottom: 0;
+    border:0;
+}
+
+.datablock .dataset--personality .col {
     float:left;
-    width: 16.666%;
+    width: 20%;
+}
+
+.datablock .dataset--tone .col {
+    float:left;
+    width: 14.285%;
+}
+
+.datablock .diary-text span {
+    font-size: 1em;
+    font-weight: bold;
+}
+
+.datablock h3  {
+    padding-left: 10px;
 }
 
 .col .col__data {
@@ -562,18 +620,73 @@ span.profile__value {
     border-right:2px solid rgba(255, 255, 255, 0.1);
 }
 
-.col:last-child .col__data--title {
+.dataset .col:last-child .col__data--title {
     border-right:0;
+}
+
+button.accordion {
+    width: 100%;
+    border-radius: 0;
+    background: #dd8846;
+    text-align: left;
+    text-transform: uppercase;
+    padding: 20px 70px 20px 20px;
+    color: #fff;
+    font-size: 1.25em;
+    margin:0;
+}
+
+button.accordion:hover {
+    background: #c2763c;
+}
+
+button.accordion.active {
+    background: #a8a8a8;
+    border-bottom: 2px solid #c2763c;
+}
+
+button.accordion:before {
+    content: "";
+    position: absolute;
+    right: 0;
+    transform: translateX(-50%);
+    border-left: solid transparent;
+    border-right: solid transparent;
+    border-top: 0px solid #fff;
+    border-bottom: solid transparent;
+    border-width: 20px;
+}
+button.accordion.active:before {
+    right: 0;
+    transform: translateX(-50%) translateY(-50%);
+    border-left: solid transparent;
+    border-right: solid transparent;
+    border-top: solid transparent;
+    border-bottom: 0px solid #fff;
+    border-width: 20px;
+}
+
+button.accordion:hover::before,
+button.accordion:focus::before {
+    right: 0;
+    left: none;
+}
+
+.panel {
+    display: none;
 }
 
 /* Footer */
 footer {
-    position: fixed;
-    bottom: 0;
     width: calc(100% - 105px);
     padding: 10px;
     text-align: center;
     margin-left: 83px;
+}
+
+.home footer {
+    position: fixed;
+    bottom: 0;
 }
 
 /* Partials */
@@ -597,12 +710,6 @@ form {
     }    
 }
 
-@media (max-width:1200px) {
-    .row .col {
-        width: 33.33%;
-    }
-}
-
 @media (max-width:1080px) {
     .personality__block {
         width: calc(50% - 60px);
@@ -611,18 +718,23 @@ form {
     .block--team {
         width: calc(50% - 60px);
     }
+    
+    .datablock .dataset--tone .col,
+    .datablock .dataset--personality .col {
+        width: 33.33%;
+    }
 }
 
 
 @media (max-width:750px) {
-    .row .col {
-        width: 50%;
-    }
 
     .block--team {
         width: calc(100% - 20px);
     }
 
+    .datablock .dataset--personality .col {
+        width: 50%;
+    }
 }
 
 @media (max-width:600px) {
@@ -632,7 +744,8 @@ form {
 }
 
 @media (max-width:550px) {
-    .row .col {
+    .datablock .dataset--tone .col,
+    .datablock .dataset--personality .col {
         width: 100%;
     }
 
