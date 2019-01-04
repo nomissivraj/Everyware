@@ -508,6 +508,7 @@ article {
     padding: 20px;
     margin-right: 20px;
     width: calc(33% - 53px);
+    min-height: 510px;
     background: rgba(221, 99, 0, 0.7);
     text-align: center;
 }
