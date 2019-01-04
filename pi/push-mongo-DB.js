@@ -69,7 +69,6 @@ exports.PushtoMongoGrowFlower = function(score){
         if (err) throw err; //throw error if can't connect
         
         var dbo = db.db('dat602');
-        console.log(score);
         dbo.collection("ActiveFlower").find({}).toArray((err, result) => { //get active flower data
             if (err) throw err;
             if(result.length < 1) { //if it doesnt exist, return.

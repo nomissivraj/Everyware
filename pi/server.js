@@ -82,6 +82,10 @@ io.on("connection", (socket) => {
     socket.on('fakeEntry', (data) => {
         beginAnalysis(data);
     });
+    
+    socket.on('adjustFlower', (data) => {
+        mongoDB.PushtoMongoGrowFlower(data);
+    });
 
 
 });
