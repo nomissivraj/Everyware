@@ -1,34 +1,117 @@
 <h1>{{ title }}</h1>
 <p>Viewing available entries from the last 31 days</p>
 
-{{#each data.personality}}
-    <div class="row">
+{{#each data}}
+    <div class="datablock">
         <div class="diary-text">
-            Diary entry text here
+            <h2>Diary Entry</h2>
+            <span>{{diaryEntry.timestamp}}</span>
+            <p>"{{diaryEntry.entry}}"</p>
         </div>
-        <div class="col">
-            <span class="col__data col__data--title">Date:</span>
-            <span class="col__data col__data--value">{{timestamp}}</span>
+        
+        <div class="dataset dataset--tone">
+            <button class="accordion">Tone Results</button>
+            <div class="panel">
+                <div class="col">
+                    <span class="col__data col__data--title">Anger: </span>
+                    {{#if tone.anger}}
+                        <span class="col__data col__data--value">{{tone.anger}}%</span>
+                    {{else}}
+                    <span class="col__data col__data--value">0%</span>
+                    {{/if}}
+                </div>
+                
+                <div class="col">
+                    <span class="col__data col__data--title">Fear: </span>
+                    {{#if tone.fear}}
+                        <span class="col__data col__data--value">{{tone.fear}}%</span>
+                    {{else}}
+                    <span class="col__data col__data--value">0%</span>
+                    {{/if}}
+                </div>
+                <div class="col">
+                    <span class="col__data col__data--title">Joy: </span>
+                    {{#if tone.joy}}
+                        <span class="col__data col__data--value">{{tone.joy}}%</span>
+                    {{else}}
+                    <span class="col__data col__data--value">0%</span>
+                    {{/if}}
+                </div>
+                <div class="col">
+                    <span class="col__data col__data--title">Sadness: </span>
+                    {{#if tone.sadness}}
+                        <span class="col__data col__data--value">{{tone.sadness}}%</span>
+                    {{else}}
+                    <span class="col__data col__data--value">0%</span>
+                    {{/if}}
+                </div>
+                <div class="col">
+                    <span class="col__data col__data--title">Analytical: </span>
+                    {{#if tone.analytical}}
+                        <span class="col__data col__data--value">{{tone.analytical}}%</span>
+                    {{else}}
+                    <span class="col__data col__data--value">0%</span>
+                    {{/if}}
+                </div>
+                <div class="col">
+                    <span class="col__data col__data--title">Confident: </span>
+                    {{#if tone.confident}}
+                        <span class="col__data col__data--value">{{tone.confident}}%</span>
+                    {{else}}
+                    <span class="col__data col__data--value">0%</span>
+                    {{/if}}
+                </div>
+                <div class="col">
+                    <span class="col__data col__data--title">Tentative: </span>
+                    {{#if tone.tentative}}
+                        <span class="col__data col__data--value">{{tone.tentative}}%</span>
+                    {{else}}
+                    <span class="col__data col__data--value">0%</span>
+                    {{/if}}
+                </div>
+            </div>
         </div>
-        <div class="col">
-            <span class="col__data col__data--title">Openness: </span>
-            <span class="col__data col__data--value">{{big5_openness}}%</span>
-        </div>
-        <div class="col">
-            <span class="col__data col__data--title">Conscientiousness: </span>
-            <span class="col__data col__data--value">{{big5_conscientiousness}}%</span>
-        </div>
-        <div class="col">
-            <span class="col__data col__data--title">Extraversion: </span>
-            <span class="col__data col__data--value">{{big5_extraversion}}%</span>
-        </div>
-        <div class="col">
-            <span class="col__data col__data--title">Agreeableness: </span>
-            <span class="col__data col__data--value">{{big5_agreeableness}}%</span>
-        </div>
-        <div class="col">
-            <span class="col__data col__data--title">Neuroticism: </span>
-            <span class="col__data col__data--value">{{big5_neuroticism}}%</span>
+
+        <div class="dataset dataset--personality">
+            <button class="accordion">Big 5 Personality Trait Results</button>
+            <div class="panel">
+                <div class="col">
+                    <span class="col__data col__data--title">Openness: </span>
+                    <span class="col__data col__data--value">{{personality.big5_openness}}%</span>
+                </div>
+                <div class="col">
+                    <span class="col__data col__data--title">Conscientiousness: </span>
+                    <span class="col__data col__data--value">{{personality.big5_conscientiousness}}%</span>
+                </div>
+                <div class="col">
+                    <span class="col__data col__data--title">Extraversion: </span>
+                    <span class="col__data col__data--value">{{personality.big5_extraversion}}%</span>
+                </div>
+                <div class="col">
+                    <span class="col__data col__data--title">Agreeableness: </span>
+                    <span class="col__data col__data--value">{{personality.big5_agreeableness}}%</span>
+                </div>
+                <div class="col">
+                    <span class="col__data col__data--title">Neuroticism: </span>
+                    <span class="col__data col__data--value">{{personality.big5_neuroticism}}%</span>
+                </div>
+            </div>
+            
         </div>
     </div>
 {{/each}}
+<script>
+var acc = document.getElementsByClassName("accordion");
+
+for (let i = 0; i < acc.length; i++) {
+  acc[i].addEventListener("click", function() {
+    this.classList.toggle("active");
+    var panel = this.nextElementSibling;
+    if (panel.style.display === "block") {
+      panel.style.display = "none";
+    } else {
+      panel.style.display = "block";
+    }
+  });
+}
+</script>
