@@ -710,6 +710,15 @@ form {
     }    
 }
 
+@media (max-width:1200px) {
+    .block--tone, .block--sentiment {
+        width:calc(100% - 40px);
+    }
+    .tone__block {
+        width: calc(33% - 60px);
+    }
+}
+
 @media (max-width:1080px) {
     .personality__block {
         width: calc(50% - 60px);
@@ -735,6 +744,10 @@ form {
     .datablock .dataset--personality .col {
         width: 50%;
     }
+    .tone__block {
+        width: calc(50% - 60px);
+    }
+
 }
 
 @media (max-width:600px) {
@@ -752,5 +765,8 @@ form {
     .block--tone, .block--sentiment {
         width: calc(100% - 40px);
         border-radius: 5px;
+    }
+    .tone__block {
+        width: calc(100% - 60px);
     }
 }
