@@ -33,23 +33,7 @@ exports.updateProfile = function(dbname, colName, data) {
         
         var dbo = db.db(dbname);
                 
-        dbo.collection(colName).replaceOne(
-            {"docname": 'user'}, //where docname is user do following
-            {
-                $set: {
-                    "name" : "fuck",
-                },
-                $unset : {
-                    "docname": "",
-                    "name": "",
-                    "age": "",
-                    "gender": "",
-                    "hobbies": ""
-                }
-            }, 
-            
-            
-            (err, res) => { //add document to collection using the passed in collection name
+        dbo.collection(colName).replaceOne({ }, data, {upsert: true}, (err, res) => { //update collection with new data
             if (err) throw err;
             console.log('Profile updated');
             db.close;
