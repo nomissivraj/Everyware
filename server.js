@@ -4,6 +4,7 @@ const express = require('express');
 const app = express();
 const getMongoD = require("./getMongoD"); // Serverside database calls for profile and history
 const pushMongo = require("./pushMongo");
+const resetMongo = require("./resetMongo");
 const hbs = require('express-handlebars'); // require handlebars
 const bodyParser = require('body-parser');
 const funcs = require('./funcs')
@@ -74,7 +75,10 @@ app.get('/about', (req, res) => {
 });
 
 app.get('/settings', (req, res) => {
-    res.render('settings', { title: 'Settings', condition: false});
+    getMongoD.getEntries('dat602', 'Profile', 1).then((data) => {
+        data = data[0];
+        res.render('settings', { title: 'Settings', data, condition: false});
+    });
 });
 
 app.post('/profile-info', (req, res) => {
@@ -90,13 +94,18 @@ app.post('/profile-info', (req, res) => {
         "location" : req.body.location,
         "hobbies" : req.body.hobbies
     }
-    pushMongo.updateProfile('dat602', 'Profile', profileObj)
-    res.redirect('/profile')    
+    pushMongo.updateProfile('dat602', 'Profile', profileObj).then((data) => {
+        res.redirect('/profile')  
+    });
+      
 });
 
 app.post('/reset-account', (req, res) => {
-    console.log("RESET ACCOUNT");
-    res.redirect('/profile')    
+    resetMongo.dropCollections('dat602').then((data) => {
+        console.log(data)
+        console.log("RESET ACCOUNT");
+        res.redirect('profile');
+    });
 });
 
 app.get('*', (req, res) => {
