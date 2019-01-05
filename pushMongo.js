@@ -12,7 +12,6 @@ var http = require('http').Server(app);
 
 //function to add item to database, takes in a collection name parameter and a document object
 exports.insert = function(dbname, colName, data) {
-
     MongoClient.connect(url, (err, db) => {
         if (err) throw err; //throw error if can't connect
         
@@ -28,16 +27,25 @@ exports.insert = function(dbname, colName, data) {
 }
 
 exports.updateProfile = function(dbname, colName, data) {
-    MongoClient.connect(url, (err, db) => {
-        if (err) throw err; //throw error if can't connect
-        
-        var dbo = db.db(dbname);
-                
-        dbo.collection(colName).replaceOne({ }, data, {upsert: true}, (err, res) => { //update collection with new data
-            if (err) throw err;
-            console.log('Profile updated');
-            db.close;
-        });   
+    return new Promise((resolve, reject) => {
+        MongoClient.connect(url, (err, db) => {
+            if (err) throw err; //throw error if can't connect
+            
+            var dbo = db.db(dbname);
+                    
+            dbo.collection(colName).replaceOne({ }, data, {upsert: true}, (err, res) => { //update collection with new data
+                if (err) throw err;
+                console.log('Profile updated');
+                var data = res;
+                db.close;
+
+                if(data) {
+                    resolve(data);
+                  } else {
+                    reject(Error("No data"));
+                  }
+            });   
+        });
     });
 }
 
