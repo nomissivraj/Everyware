@@ -28,31 +28,32 @@
 <script src="/js/socket.io.js"></script>
     <script>
         //Connect to socket through port in pi/server.js
-        var socket = io.connect('http://localhost:5000');
-        //When book open event is sent from server Log book open and switch to index page
-        socket.on('bookOpen', (state) => {
-            console.log(state);
-            if (state === false) {
-                window.location.replace("/");
-            }
-        });
-               //When transcript is recieved from server (triggered by stop state in server) get transcript container and insert transcript
-        socket.on('transcript', (transcriptRes) => {
-            console.log("recieved transcript1");
-            if (transcriptRes) {
-                console.log("recieved transcript2");
-                console.log(transcriptRes);
-                transcriptCont.innerHTML = transcriptRes;
-            }
-        });
-
+        var socket = io.connect('http://localhost:5000', {forceNew:true, multiplex:true});
         //Button Functions
-        //Get buttons
+        //Get Elements
         var startBtn = document.getElementById('startBtn');
         var stopBtn = document.getElementById('stopBtn');
         var submitBtn = document.getElementById('submitBtn');
         var transcriptCont = document.getElementById('transcript');
         var infoCont = document.getElementById('information');
+
+        //When book open event is sent from server Log book open and switch to index page
+        socket.on('bookOpen', (state) => {
+            //console.log(state);
+            if (state === false) {
+                window.location.replace("/");
+            }
+        });
+            //When transcript is recieved from server (triggered by stop state in server) get transcript container and insert transcript if previous message is different to new one (this stops constant DOM updating)
+        var prevMsg = "";
+        socket.on('transcript', (transcriptRes) => {
+            if (transcriptRes !== prevMsg) {
+                console.log("previous message", prevMsg);
+                transcriptCont.innerHTML = transcriptRes;
+                prevMsg = transcriptRes;
+            }
+        });
+
         
         //on start click - emit 'record' to set recording mode, show stop btn and hide start btn 
         function startRecord(el) {
