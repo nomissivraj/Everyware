@@ -42,15 +42,11 @@ serial.on('data', (data) => {
 server.listen(5000); // Port for socket to listen on
 var sent = 0;
 io.on("connection", (socket) => {
+	transcript = "";
     // EMIT TO CLIENT
     setInterval(() => {
 		socket.emit("bookOpen", bookState);
-		if (transcript) {
-			console.log("sending transcript:", transcript)
-			socket.emit("transcript", transcript);	
-			transcript = null;
-			sent = 0;
-		}
+		socket.emit("transcript", transcript);	
     }, 1000);
     //Send book status to client every second - where it will be checked and page changed accordingly.        
     
