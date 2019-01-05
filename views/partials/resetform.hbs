@@ -1,16 +1,53 @@
-<form id="resetform" action="/reset-account" method="POST">
+<form id="resetform" name="resetForm" action="/reset-account" onsubmit="return validateForm(this)" method="POST">
     <legend>Reset Account</legend>
     <div class="alert">
         <span>Warning, resetting account will clear all data including profile information and all previous diary entries and analysis</span>
     </div>
-    <button class="halfbtn positive" type="submit" value="Confirm Reset">Confirm Reset</button><button type="button" class="halfbtn caution" onclick="cancelReset(this)">cancel</button>
+    <h3>Please confirm your name to proceed:</h3>
+    <input type="text" value="" name="name" placeholder="Your Name">
+    <button id="confirmbtn" class="halfbtn positive" type="submit" value="Confirm Reset">Confirm Reset</button><button type="button" class="halfbtn caution" onclick="cancelReset(this)">cancel</button>
 </form> 
 <script>
+    var nameInDB = "{{data.name}}";
     function cancelReset(el) {
+        removeElement("alert--validation");
         var resetForm = document.getElementById('resetform');
         var resetBtn = document.getElementsByClassName('resetaccount-btn')[0];
         resetForm.style.display = "none";
         resetBtn.style.display = "block";
         this.display = "none";
+    }
+
+    function removeElement(el) {
+        var el = document.getElementsByClassName(el)[0];
+        if (el) {
+            el.parentNode.removeChild(el);
+        } else return false;
+    }
+
+    function addWarning(form) {
+        var newDiv = document.createElement('div');
+        newDiv.classList.add("alert");
+        newDiv.classList.add("alert--validation");
+        var text = document.createTextNode("Name did not match database, try again or cancel");
+        newDiv.appendChild(text);            
+        form.insertBefore(newDiv, form.name)
+    }
+
+    function validateForm(form) {
+        var nameInForm = form.name.value;
+        if (!nameInDB) {
+            removeElement("alert--validation");
+            addWarning(form);
+            return false;
+        } 
+        if (nameInDB === nameInForm) {
+            removeElement("alert--validation");
+            return true;
+        } else {
+            removeElement("alert--validation");
+            addWarning(form);
+            return false;
+        }
     }
 </script>
