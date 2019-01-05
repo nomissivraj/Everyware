@@ -27,7 +27,7 @@
             
         {{/each}}
     {{else}}
-            <p>No user exists, please create one</p>
+            <p>No user exists, please create one using the Sensum diary</p>
             <button class="editprofile-btn smallbtn" onclick="edit(this)">Create Profile</button>
             {{> profileform}}
     {{/if}}
@@ -37,9 +37,14 @@
 
 <div class="block block--diary-entry">
     <h2>Latest Diary Entry</h2>
-    {{#each data.diaryEntry}}
-        <blockquote>"{{entry}}"</blockquote>
-    {{/each}}
+    {{#if data.diaryEntry}}
+        {{#each data.diaryEntry}}
+            
+                <blockquote>"{{entry}}"</blockquote>
+        {{/each}}
+    {{else}}
+     No Diary entry available, please make one using the Sensum diary
+    {{/if}}
 </div>
 <div class="block block--tone">
     <h2>Tone</h2>
@@ -91,13 +96,13 @@
             </div>
         {{/each}}
     {{else}}
-        No tone data yet, please create a diary entry
+        No tone data yet, please create a diary entry using the Sensum diary
     {{/if}}
 </div>
-<div class="block block--sentiment">
+{{!-- <div class="block block--sentiment">
     <h2>Sentiment</h2>
     <p>get sentiment results here</p>
-</div>
+</div> --}}
 <div class="block block--personality">
     
     <h2>Personality Insights</h2>
@@ -127,7 +132,7 @@
             </div>
         {{/each}}
     {{else}}
-        No tone data yet, please create a diary entry
+        No tone data yet, please create a diary entry using the Sensum diary
     {{/if}}
 
 </div>
