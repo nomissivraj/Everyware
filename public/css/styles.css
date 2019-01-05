@@ -204,7 +204,7 @@ label {
 }
 
 #gendergroup label {
-    width: calc(33.33% - 43px);
+    width: calc(33.33% - 44px);
     display: inline-block;
     cursor: pointer;
     position: relative;
@@ -289,7 +289,7 @@ button.editprofile-btn.smallbtn {
 }
 
 .dob {
-    width: calc(33.33% - 17px);
+    width: calc(33.33% - 18px);
     line-height: 17px;
 }
 
@@ -468,9 +468,9 @@ article {
     padding-left: 0px;
 }
 
-.block--tone,
-.block--sentiment {
-    width: calc(50% - 50px);
+.block--tone/* ,
+.block--sentiment */ {
+    width: calc(100% - 40px);
     margin-right: 20px;
     background: rgba(221, 99, 0, 0.7);
     border-radius: 5px;
@@ -478,20 +478,21 @@ article {
 
 .block--tone {
     padding-right: 20px;
-    width: calc(66.66% - 50px);
+    /* width: calc(66.66% - 50px); */
+    width: calc(100% - 50px);
 }
-
+/* 
 .block--sentiment {
     margin-right: 0;
     width: calc(33.33% - 50px);
-}
+} */
 
 .block--personality {
     background: rgba(221, 99, 0, 0.7);
 }
 
 .block--tone h2,
-.block--sentiment h2,
+/* .block--sentiment h2, */
 .block--personality h2 {
     color: #fff;
 }
@@ -548,7 +549,8 @@ article {
     padding-left: 0;
     background: #fbfbfb;
     padding: 20px;
-    width: calc(50% - 40px);
+    width: calc(100% - 40px);
+    max-width: 650px;
     font-size: 1.25em;
 }
 
@@ -706,8 +708,8 @@ footer {
 form {
     border-radius: 5px;
     padding: 20px;
-    width: calc(50% - 45px);
-    max-width: 100%;
+    width: calc(100% - 45px);
+    max-width: 650px;
     background: rgba(170, 170, 170, 0.27);
     border: 3px solid #b9b9b9;
     margin-bottom: 20px;
@@ -725,7 +727,7 @@ form {
 }
 
 @media (max-width:1200px) {
-    .block--tone, .block--sentiment {
+    .block--tone/* , .block--sentiment */ {
         width:calc(100% - 40px);
     }
     .tone__block {
@@ -776,7 +778,7 @@ form {
         width: 100%;
     }
 
-    .block--tone, .block--sentiment {
+    .block--tone/* , .block--sentiment */ {
         width: calc(100% - 40px);
         border-radius: 5px;
     }
