@@ -46,7 +46,7 @@ io.on("connection", (socket) => {
     setInterval(() => {
 		socket.emit("bookOpen", bookState);
 		if (transcript) {
-			console.log("sending transcript")
+			console.log("sending transcript:", transcript)
 			socket.emit("transcript", transcript);	
 			transcript = null;
 			sent = 0;
@@ -150,7 +150,9 @@ var speechToText = new SpeechToTextV1({
 var params = {
     objectMode: false,
     content_type: 'audio/wav',
-    model: 'en-GB_BroadbandModel'
+	model: 'en-GB_BroadbandModel',
+	continuous: true,
+	interim_results: false
 };
 
 var transcript;
@@ -168,12 +170,18 @@ function toText(dir,file) {
 	// Listen for events.
 	recognizeStream.on('data', function(event) { onEvent('Data:', event); });
 	recognizeStream.on('error', function(event) { onEvent('Error:', event); });
-	//recognizeStream.on('close', function(event) { onEvent('Close:', event); });
-
+	recognizeStream.on('close', function(event) { onEvent('Close:', event); });
+	var text = [];
 	// Display events on the console	
 	function onEvent(name, event) {
-		console.log("EVENT: ", event);
-		transcript = event;
+		console.log(name);
+		if (name === "Data:") {
+			text.push(event.trim());
+			console.log("EVENT: ", event);
+		} else if (name === "Close:") {
+			var result = text.join(', ');
+			transcript = result;
+		}
 	};
 }
 
