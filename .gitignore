@@ -4,3 +4,4 @@ pi/node_modules
 pi/package-lock.json
 _DS_Store
 .DS_Store
+.vscode
