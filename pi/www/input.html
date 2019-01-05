@@ -31,14 +31,16 @@
         var socket = io.connect('http://localhost:5000');
         //When book open event is sent from server Log book open and switch to index page
         socket.on('bookOpen', (state) => {
+            console.log(state);
             if (state === false) {
                 window.location.replace("/");
             }
         });
                //When transcript is recieved from server (triggered by stop state in server) get transcript container and insert transcript
         socket.on('transcript', (transcriptRes) => {
+            console.log("recieved transcript1");
             if (transcriptRes) {
-                console.log("recieved transcript");
+                console.log("recieved transcript2");
                 console.log(transcriptRes);
                 transcriptCont.innerHTML = transcriptRes;
             }
