@@ -40,9 +40,16 @@
         //When book open event is sent from server Log book open and switch to index page
         socket.on('bookOpen', (state) => {
             //console.log(state);
-            if (state === false) {
-                window.location.replace("/");
+            
+			var redirect;
+			if (state === false) {
+				redirect = setTimeout(() => {
+					window.location.replace("/");
+				},1500);
             }
+			if (state === true) {
+				clearTimeout(redirect);
+			}
         });
             //When transcript is recieved from server (triggered by stop state in server) get transcript container and insert transcript if previous message is different to new one (this stops constant DOM updating)
         var prevMsg = "";
