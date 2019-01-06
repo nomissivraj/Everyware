@@ -1,7 +1,7 @@
 <form id="profileform" action="/profile-info" method="POST">
 <legend>Edit Profile Info</legend>
     <label for="fullname">Full name:</label>
-    <input type="text" id="fullname" name="fullname" value="" placeholder="Full Name" required>
+    <input type="text" id="fullname" name="fullname" value="{{#if data.profile}}{{#each data.profile}}{{name}}{{/each}}{{else}}{{data.name}}{{/if}}" placeholder="Full Name" required>
 
     <label for="birthdate">Date of Birth:</label>
     <div id="birthdate">
@@ -43,10 +43,10 @@
     </div>
 
     <label for="location">Location:</label> 
-    <input id="location" type="text" name="location" placeholder="Location">
+    <input id="location" type="text" name="location" value="{{#if data.profile}}{{#each data.profile}}{{location}}{{/each}}{{else}}{{data.location}}{{/if}}" placeholder="Location">
 
     <label for="hobbies">Hobbies:</label>
-    <textarea id="hobbies" type="text-area" name="hobbies" value=""></textarea>
+    <textarea id="hobbies" type="text-area" name="hobbies">{{#if data.profile}}{{#each data.profile}}{{hobbies}}{{/each}}{{else}}{{data.hobbies}}{{/if}}</textarea>
     <button class="halfbtn positive" type="submit" value="Submit">Submit</button><button type="button" class="halfbtn caution" onclick="cancel(event, this)">cancel</button>
 </form> 
 
@@ -64,4 +64,46 @@
         editBtn.style.display = "block";
         this.display = "none";
     }
+    //Function to populate profile form - this needs to be in page and not script file to access Handlebars data: {{data.profile}} etc.
+    //Part of the form is simply populated above using Handlebars helpers but for the select/dropdown/multiple option inputs this function is needed
+    function populateProfileForm() {
+        //Check which radio should be checked
+        var gender = '{{#if data.profile}}{{#each data.profile}}{{gender}}{{/each}}{{else}}{{data.gender}}{{/if}}'; //Gender from database/Handlebars variable
+        var radios = document.getElementsByName('gender'); //All radios with name "gender"
+        for (let i = 0; i < radios.length; i++) {//Loop through all gender radios and if the value matches the database gender check that radio
+            if (radios[i].value === gender) {
+                radios[i].checked = true;
+            }
+        }
+
+        //check date of birth
+        var dob = "{{#if data.profile}}{{#each data.profile}}{{age}}{{/each}}{{else}}{{data.age}}{{/if}}";
+        console.log(dob)
+        //get dob year month and day values from database string
+        if (dob > 0){
+            var dbYear = Number(dob.substr(0, 4));
+            var dbMonth = Number(dob.substr(4, 2)) - 1;
+            var dbDay = Number(dob.substr(6, 2));
+        }
+        
+        // get dob form elements
+        var formYear = document.getElementsByName('year')[0];
+        var formMonth = document.getElementsByName('month')[0];
+        var formDay = document.getElementsByName('day')[0];
+        //set form year to the db year
+        if (dbYear >= 0) {
+            formYear.value = dbYear;
+        }   
+        //set form month to equal dbMonth value + 1 - reason for +1 is that there is an extra option/index in the select for the placeholder 
+        if (dbMonth >= 0) { //if the value is not a number or is undefined etc don't do this
+            formMonth.selectedIndex = dbMonth+1;
+        }
+        //set form day to the db day
+        if (dbDay >= 0) {
+            formDay.value = dbDay;
+        }
+                
+    }
+    populateProfileForm();
+    
 </script>
