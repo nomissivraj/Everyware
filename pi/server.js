@@ -28,7 +28,6 @@ var file = "entry.wav"; //Filename of diary audio entry
 //Puts port in flowing mode
 //console.log("serial: ",serial);
 serial.on('data', (data) => {
-	console.log(bookState);
 	if (parseInt(data) > 0 ) {
 		//console.log('Data:', parseInt(data));
 		if (parseInt(data) > 30) {
