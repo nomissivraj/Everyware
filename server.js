@@ -50,11 +50,16 @@ app.get('/profile', (req, res) => {
 
     //Only when promise is fulfulled will the page render happen. MIGHT NEED TO TEST WHAT HAPPENS IF NO DATA EXISTS?
     Promise.all([personality, diaryEntry, profile, tone]).then((collections) => {
-        var data = {
+        var userAge = "";
+        if (collections[2][0]) { //If profile exists parse date of birth into age in years
+            userAge = funcs.parseAge(collections[2][0].age)
+        }
+        var data = { //Build data object of all collections so all can be easily accessed client-side using Handlebars and dot notation
             "personality": collections[0],
             "diaryEntry": collections[1],
             "profile": collections[2],
-            "tone": collections[3]
+            "tone": collections[3],
+            "userAge": userAge
         }
         res.render('profile', {title: 'Profile', data, condition: false})
     });
@@ -89,7 +94,7 @@ app.post('/profile-info', (req, res) => {
 
     var profileObj = {
         "name" : req.body.fullname,
-        "age" :  funcs.parseAge(dob),
+        "age" :  dob,
         "gender" : req.body.gender,
         "location" : req.body.location,
         "hobbies" : req.body.hobbies
