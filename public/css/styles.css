@@ -479,7 +479,7 @@ article {
 .block--tone {
     padding-right: 20px;
     /* width: calc(66.66% - 50px); */
-    width: calc(100% - 50px);
+    width: calc(100% - 40px);
 }
 /* 
 .block--sentiment {
