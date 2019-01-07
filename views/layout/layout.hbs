@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<!-- This is the model or template for the general structure of the website, this sets out the frame for which every pages content will be loaded into using Handlebars helpers etc. -->
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -63,7 +64,9 @@
         Copyright Sensum Diary
     </footer>
     <script>
+        //call menu animation function on load to initialise event listeners and run functions when required
         menuAnimation();
+        //If the current page is the homepage invoke the refresh on resize function
         {{#equals "Home" title}}refreshResize(){{/equals}}
     </script>
 </body>
