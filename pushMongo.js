@@ -26,19 +26,20 @@ exports.insert = function(dbname, colName, data) {
 
 }
 
+//Function to update profile rather than add new or duplicate
 exports.updateProfile = function(dbname, colName, data) {
     return new Promise((resolve, reject) => {
         MongoClient.connect(url, (err, db) => {
             if (err) throw err; //throw error if can't connect
             
             var dbo = db.db(dbname);
-                    
+            //The first perameter is essentially the search term for which document to update - since this collection is only intended for one collection and the perameter is an empty object it replaces any existing document
             dbo.collection(colName).replaceOne({ }, data, {upsert: true}, (err, res) => { //update collection with new data
                 if (err) throw err;
                 console.log('Profile updated');
                 var data = res;
                 db.close;
-
+                // Resolve or reject promise if data is returned or not. 
                 if(data) {
                     resolve(data);
                   } else {
