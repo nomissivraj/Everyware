@@ -1,6 +1,12 @@
+{{!-- Profile page some data insertion here but only getting the last entry and profile info --}}
 <h1>{{ title }}</h1>
 
 <div class="block block--user">
+    {{!-- 
+        - If profile data exists then loop through it (even though only one set of data for each category since it comes through as an array item) and insert details 
+        - Else display a message indicating that noe user exists yet and the user information needs to creat a profile
+        - Also include a button to reveal profile info form so the user can create their profile 
+    --}}
     {{#if data.profile}}
         {{#each data.profile}}
             <div class="profile__item">
@@ -37,6 +43,7 @@
 
 <div class="block block--diary-entry">
     <h2>Latest Diary Entry</h2>
+    {{!-- if diary entry exists render the entry else display mesasge indicating none exists yet and that the user should make an entry --}}
     {{#if data.diaryEntry}}
         {{#each data.diaryEntry}}
             
@@ -48,6 +55,7 @@
 </div>
 <div class="block block--tone">
     <h2>Tone</h2>
+    {{!-- if tone data exists render the data else display mesasge indicating none exists yet and that the user should make an entry --}}
     {{#if data.tone}}
         {{#each data.tone}}
             <div class="tone__block--container">
@@ -99,13 +107,11 @@
         No tone data yet, please create a diary entry using the Sensum diary
     {{/if}}
 </div>
-{{!-- <div class="block block--sentiment">
-    <h2>Sentiment</h2>
-    <p>get sentiment results here</p>
-</div> --}}
+
 <div class="block block--personality">
     
     <h2>Personality Insights</h2>
+    {{!-- if personality analysis data exists, render the data - else display mesasge indicating none exists yet and that the user should make an entry --}}
     {{#if data.personality}}
         {{#each data.personality}}
             <div class="personality__block--container">
