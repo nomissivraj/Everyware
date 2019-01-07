@@ -1,5 +1,7 @@
+<!-- History page - this one has the most data insertion and probably most complex dynamic HTML building -->
 <h1>{{ title }}</h1>
 <p>Viewing available entries from the last 31 days</p>
+{{!-- If data exists render data using methods contained else present a message indicating no data has arrived yet | this should void server crashes and give more feedback to user --}}
 {{#if data}}
     {{#each data}}
         <div class="datablock">
@@ -104,12 +106,19 @@
 No data currently available, please make a diary entry
 {{/if}}
 <script>
+//Simple accordion script
+    //Get element to manipulate
 var acc = document.getElementsByClassName("accordion");
 
+//for all elements with accordion in the classlist add an event listener and manipulate as required
 for (let i = 0; i < acc.length; i++) {
+    //add an click event listener to the element - this will serve as a button/toggle using CSS to visually indicate it's usage
   acc[i].addEventListener("click", function() {
+      //for the current button/toggled that was clicked on - add class of active - will use CSS to visualise an activated state
     this.classList.toggle("active");
+    //given that the panel of the accordion should always be directly after the button/toggle get the next sibling which should be the panel
     var panel = this.nextElementSibling;
+    //Toggle logic - if already displayed, once toggle/button clicked hide the panel else show the panel 
     if (panel.style.display === "block") {
       panel.style.display = "none";
     } else {
