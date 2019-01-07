@@ -1,19 +1,31 @@
+{{!-- Settings page will need to enable user to update profile and also reset entire account/database from here --}}
 <h1>{{ title }}</h1>
 <p>On this page you can edit your profile information, as you can on the profile page itself. However you may also reset your account</p>
 <button class="editprofile-btn largebtn" onclick="edit(this)"><span>Edit Profile Info</span></button>
+{{!-- include profile form partial (this is hidden by default and shown on click of above button) --}}
 {{> profileform}}
 <button class="resetaccount-btn largebtn negative" onclick="resetAccount(this)"><span>Reset Account</span></button>
+{{!-- include reset form partial (this is hidden by default and shown on click of above button) --}}
 {{> resetform}}
 
 <script>
+    //Function to display profile form and hide edit button
     function edit(el) {
+        //el is the button itself that was clicked - passed through via the onclick
+        //get profile form element
         var editForm = document.getElementById('profileform');
+        //Set profile form to display once this button is clicked
         editForm.style.display = "block";
+        //hide this button
         el.style.display = "none";
     }
     function resetAccount(el) {
+        //el is the button itself that was clicked - passed through via the onclick
+        //get reset form element
         var resetForm = document.getElementById('resetform');
+        //Set reset form to display once this button is clicked
         resetForm.style.display = "block";
+        //hide this button
         el.style.display = "none";
     }
 </script>
