@@ -232,8 +232,7 @@ app.use(express.static('www'));
 
 app.get('/', (req, res) =>{
 	res.sendFile(__dirname + "/www/visualisation.html");
-	micState = "stopped";
-	handleRecording();
+	if (child) child.kill();
 });
 
 app.get('/input', (req, res) =>{
