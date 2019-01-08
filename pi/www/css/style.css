@@ -4,6 +4,7 @@ html{
 
 body {
 	margin: 0px;
+    overflow: hidden;
 	background: -webkit-radial-gradient(center, #f7f7f7 -0%, #e9e9e9 70%);
     background: -moz-radial-gradient(center, #f7f7f7 -0%, #e9e9e9 70%);
     background: -o-radial-gradient(center, #f7f7f7 -0%, #e9e9e9 70%);
