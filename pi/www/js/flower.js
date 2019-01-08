@@ -25,15 +25,16 @@ function Flower(color, petals, currentScore, oldScore, active, parent){
                 this.state = "flower3";
             } else {
                 this.state = "illflower3";
+
             }
         }
         if(this.currentScore >= 100){
             this.state = "flower4";
         }
         
-        flowerSprite = new Sprite(loader.resources[this.state].texture);
-        flowerSprite.anchor.set(0.5, 1);
-        flowerSprite.position.set(canvWidth * 0.5, canvHeight * 0.84);
+        this.flowerSprite = new Sprite(loader.resources[this.state].texture);
+        this.flowerSprite.anchor.set(0.5, 1);
+        this.flowerSprite.position.set(canvWidth * 0.5, canvHeight * 0.84);
         if(this.currentScore >= 100){
             
             //draw the petals and tint
@@ -43,16 +44,16 @@ function Flower(color, petals, currentScore, oldScore, active, parent){
             petalSprite.anchor.set(0.5);
             petalSprite.tint = this.color;
             petalSprite.y = -600;
-            flowerSprite.addChild(petalSprite);
+            this.flowerSprite.addChild(petalSprite);
             
             //create the center of the flower
             let flowerCenter = new Sprite(loader.resources.flowerCenter.texture);
             flowerCenter.anchor.set(0.5);
             flowerCenter.y = -600;
-            flowerSprite.addChild(flowerCenter);
+            this.flowerSprite.addChild(flowerCenter);
         }
-        flowerSprite.scale.set(0.8);
-        parent.addChild(flowerSprite);
+        this.flowerSprite.scale.set(0.8);
+        parent.addChild(this.flowerSprite);
         
         
         

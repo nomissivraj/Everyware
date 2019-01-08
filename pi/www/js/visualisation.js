@@ -57,6 +57,7 @@ var gardenPanelObj;
 
 //to track the DEBUG cheat code
 var debugCodeCount = 0;
+var debugCount = 0;
 
 var dummyEntries = [
     "Well, today wasn’t half bad. Woke up after a lie in and made myself some cereal which was great. No one was home considering it was the weekend so I had a whole house to myself for most of the day. I just lounged around, watched TV, played games, and just generally wasted the day away. I guess it wasn’t productive but sometimes you just need those lazy days. But anyways, my housemate came home later in the day and cooked a huge roast dinner for us and some friends we invited round – and he cooks a mean roast. That’s basically the day really, nothing particularly interesting but it was enjoyable.",
@@ -162,6 +163,12 @@ function setup(){
     groundSprite.anchor.set(0.5, 0.5);
     groundSprite.position.set(canvWidth * 0.5, canvHeight * 0.95);
     groundSprite.scale.set(0.9);
+    if(!flowerPlanted){
+        groundSprite.interactive = true;
+        groundSprite.on('pointerdown', function(e){
+            createNewFlower();  
+        });
+    }
     
     
     //add the ground to the stage
@@ -237,7 +244,7 @@ function setupActiveFlower(data){
     activeFlowerJSON = JSON.parse(data);
     if(activeFlowerJSON.length == 0){
         flowerPlanted = false;
-        noFlowerText = new text('No flower planted! Tap the screen to plant!', style);
+        noFlowerText = new text('No flower planted! Tap the ground to plant a seed!', style);
         noFlowerText.anchor.set(0.5);
         noFlowerText.x = canvWidth / 2;
         noFlowerText.y = canvHeight * 0.95;
@@ -258,19 +265,19 @@ function setupActiveFlower(data){
         }
         let oldScore = activeFlowerJSON[0].oldFlowerScore;
         activeFlower = new Flower(color, petals, currentScore, oldScore, true, spriteContainer);
+        
+        //if the flower is fully grown, make it clickable
+        if(currentScore >= 100){
+            activeFlower.flowerSprite.interactive = true;
+            activeFlower.flowerSprite.on('pointerdown', function(e){
+                createNewFlower();  
+            });
+        }
     }
     
 }
 
-var canvas = document.getElementsByTagName("canvas")[0];
-canvas.addEventListener("click", () => {
-    if(flowerComplete || !flowerPlanted){
-        createNewFlower();
-    }
-});
-
-
-
+//function to create a new flower
 function createNewFlower(){
     let newFlower = {
         color: petalColors[getRandomInt(0, petalColors.length - 1)],
@@ -281,7 +288,8 @@ function createNewFlower(){
     if(!flowerPlanted) spriteContainer.removeChild(noFlowerText);
     if(flowerComplete) {
         spriteContainer.removeChild(flowerCompleteText);
-        spriteContainer.removeChild(flowerSprite);
+        
+        spriteContainer.removeChild(activeFlower.flowerSprite);
     }
     //create temp seed planted flower
     activeFlower = new Flower(0, 0, 0, 0, true, spriteContainer);
@@ -385,7 +393,14 @@ function createSun(parent){
 }
 function Cloud(parent, first){
     
-    this.speed = 0.2 + getRandomFloat(0, 0.5);
+    //set cloud speed according to conscientiousness value
+    let speed = 0.2 + getRandomFloat(0, 0.5);
+    
+    //multplier, min is 0.3, max 2, range is 1.7
+    let invertScore = 100 - conscientiousnessScore;
+    let speedMod = ((invertScore * 1.7) / 100) + 0.3
+    
+    this.speed = speed * speedMod;
     
     
     //if first clouds then spawn on screen
@@ -468,6 +483,7 @@ function gardenPanel(){
     this.sprite = new Sprite(loader.resources.gardenPanel.texture);
     this.sprite.anchor.set(0.5);
     this.sprite.position.set(-1000, -1000);
+    this.sprite.interactive = true;
     this.currentPage = 0;
     this.pageCount = 0;
     this.onScreen = false;
@@ -601,6 +617,7 @@ function infoPanel(){
     this.sprite = new Sprite(loader.resources.infoPanel.texture);
     this.sprite.anchor.set(0.5);
     this.sprite.position.set(-1000, -1000);
+    this.sprite.interactive = true;
     this.onScreen = false;
     app.stage.addChild(this.sprite);
     
@@ -636,6 +653,16 @@ function infoPanel(){
             scoreText.scale.set(0.6);
             scoreText.position.set(48, 165 + (i * 32)); //165
             this.sprite.addChild(scoreText);
+            if(i == 0){
+                scoreText.interactive = true;
+                scoreText.on('pointerdown', function(e){
+                    debugCount++; 
+                    if(debugCount == 10){
+                        console.log('debug mode activated');
+                        debugMode(btnContainer);
+                    }
+                });
+            }
             
     }
     
@@ -706,6 +733,7 @@ function debugPanel(){
     this.sprite = new Sprite(loader.resources.debugPanel.texture);
     this.sprite.anchor.set(0.5);
     this.sprite.position.set(-1000, -1000);
+    this.sprite.interactive = true;
     this.onScreen = false;
     app.stage.addChild(this.sprite);
     

@@ -190,12 +190,20 @@ function drawLoop(){
 
 function parsePersonality(data){
     parsedData = JSON.parse(data);
-    lastEntry = parsedData[parsedData.length - 1];
-    opennessScore = lastEntry.big5_openness;
-    conscientiousnessScore = lastEntry.big5_conscientiousness;
-    extraversionScore = lastEntry.big5_extraversion;
-    agreeablenessScore = lastEntry.big5_agreeableness;
-    neuroticismScore = lastEntry.big5_neuroticism;
+    if(parsedData.length > 0){
+        lastEntry = parsedData[parsedData.length - 1];
+        opennessScore = lastEntry.big5_openness;
+        conscientiousnessScore = lastEntry.big5_conscientiousness;
+        extraversionScore = lastEntry.big5_extraversion;
+        agreeablenessScore = lastEntry.big5_agreeableness;
+        neuroticismScore = lastEntry.big5_neuroticism;
+    } else {
+        opennessScore = 50;
+        conscientiousnessScore = 50;
+        extraversionScore = 50;
+        agreeablenessScore = 50;
+        neuroticismScore = 50;
+    }
 }
 
 function setupActiveFlower(data){
@@ -350,7 +358,14 @@ function createSun(parent){
 }
 function Cloud(parent, first){
     
-    this.speed = 0.2 + getRandomFloat(0, 0.5);
+    //get random cloud speed between 0.2 and 0.7
+    let speed = 0.2 + getRandomFloat(0, 0.5);
+    
+    //multplier controlled by conscientiousness score, min is 0.3, max 2, range is 1.7
+    let invertScore = 100 - conscientiousnessScore;
+    let speedMod = ((invertScore * 1.7) / 100) + 0.3
+    
+    this.speed = speed * speedMod;
     
     
     //if first clouds then spawn on screen
