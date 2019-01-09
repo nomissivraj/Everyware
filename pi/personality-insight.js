@@ -22,6 +22,17 @@ exports.AnalysePersonality = function(entry, timeStamp) {
     personalityInsights.profile(profileParams, function (error, profile) {
         if (error) {
             console.log(error); //throw error if personality insight doesn't work
+            var emptyData = {
+                "big5_openness": 0,
+                "big5_conscientiousness": 0,
+                "big5_extraversion": 0,
+                "big5_agreeableness": 0,
+                "big5_neuroticism": 0,
+                "timestamp": timeStamp
+            }
+            mongoDB.PushtoMongo("Personality", emptyData);
+            
+            
         } else {
             var filteredProfile = {}; //create filteredProfile object to hold the parsed data.
             let flowerScore = 0; //to hold the flower growth modifier
