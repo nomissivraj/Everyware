@@ -42,7 +42,7 @@
             addWarning(form);
             return false;
         } 
-        if (nameInDB === nameInForm) {
+        if (nameInDB.toLowerCase === nameInForm.toLowerCase) {
             removeElement("alert--validation");
             return true;
         } else {
