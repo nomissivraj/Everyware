@@ -5,7 +5,9 @@ function Flower(color, petals, currentScore, oldScore, active, parent){
     this.health = currentScore - oldScore;
     this.state;
     
-    if(active){
+    if(active){ //if the flower is the main active one
+        
+        //if statement to decide flower growth state, using string
         if(currentScore <= 20){
             this.state = "flower0";
         } else if(this.currentScore <= 40){
@@ -32,17 +34,16 @@ function Flower(color, petals, currentScore, oldScore, active, parent){
             this.state = "flower4";
         }
         
-        this.flowerSprite = new Sprite(loader.resources[this.state].texture);
-        this.flowerSprite.anchor.set(0.5, 1);
+        this.flowerSprite = new Sprite(loader.resources[this.state].texture); //set flower sprite using string defined above
+        this.flowerSprite.anchor.set(0.5, 1); //set the sprites anchor to the bottom middle of the image
         this.flowerSprite.position.set(canvWidth * 0.5, canvHeight * 0.84);
         if(this.currentScore >= 100){
             
             //draw the petals and tint
-            let petalString = "petals" + this.petals;
-            
+            let petalString = "petals" + this.petals; //use this.petals to make concatenated string
             let petalSprite = new Sprite(loader.resources[petalString].texture);
             petalSprite.anchor.set(0.5);
-            petalSprite.tint = this.color;
+            petalSprite.tint = this.color; //tint using color
             petalSprite.y = -600;
             this.flowerSprite.addChild(petalSprite);
             
@@ -59,11 +60,11 @@ function Flower(color, petals, currentScore, oldScore, active, parent){
         
     }
     
-    else if(!active) {
-        let petalString = "petals" + this.petals;
-        let petalSprite = new Sprite(loader.resources[petalString].texture);
+    else if(!active) { //if the flower is not active (meaning its in the previous flower panel)
+        let petalString = "petals" + this.petals; //create the petal type string 
+        let petalSprite = new Sprite(loader.resources[petalString].texture); //use the string to create the petal sprite
         petalSprite.anchor.set(0.5);
-        petalSprite.tint = this.color;
+        petalSprite.tint = this.color; //tint with color
         parent.addChild(petalSprite);
         
         

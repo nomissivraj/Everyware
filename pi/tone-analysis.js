@@ -13,7 +13,7 @@ var toneAnalyzer = new ToneAnalyzerV3({
 var mongoDB = require('./push-mongo-DB.js'); //enable access to pushtomongo function
 
 exports.AnalyseTone = function(entry, timeStamp) { 
-    var toneParams = { //create object to analyse tone
+    var toneParams = { //create object to hold tone analysis params
         tone_input: { 'text': entry }, //use diary entry
         content_type: 'application/json',
         sentences: 'false' //don't analyse individual sentences

@@ -55,10 +55,11 @@ var cloudContainer = new PIXI.Container();
 //the garden panel to see previous flowers
 var gardenPanelObj;
 
-//to track the DEBUG cheat code
+//to track the DEBUG mode entry
 var debugCodeCount = 0;
 var debugCount = 0;
 
+//dummy entries for use in debug mode
 var dummyEntries = [
     "Well, today wasn’t half bad. Woke up after a lie in and made myself some cereal which was great. No one was home considering it was the weekend so I had a whole house to myself for most of the day. I just lounged around, watched TV, played games, and just generally wasted the day away. I guess it wasn’t productive but sometimes you just need those lazy days. But anyways, my housemate came home later in the day and cooked a huge roast dinner for us and some friends we invited round – and he cooks a mean roast. That’s basically the day really, nothing particularly interesting but it was enjoyable.",
     "Hey diary, just wanted to say that I had one hell of a time at Thorpe Park with some mates today. Haven’t been in there in a long time and I almost forgot just how much I love roller coasters. One of the guys wimped out though and didn’t go on most of the rides but oh well, he tagged along for everything else at least. Only bad thing I can think of is the long and tiring car journey, but other than that it was all pretty good. Hopefully I can go to a theme park again, I definitely miss them.",
@@ -68,9 +69,9 @@ var dummyEntries = [
     "So, today I had one of those days where for some reason everything just annoyed me. I think it started because my housemate doesn’t know how to make a damn cup of tea, I mean, how can you not!? It’s just water and tea – and milk if you want it. And does he have to spend over an hour in the shower. We have 1 toilet between the 3 of us and I just sat there waiting, holding in my bladder for an age. The supermarket was out of bread as well which sucked, but I wouldn’t have needed bread if Martin hadn’t dropped the entire loaf on the floor. This is basically me just ranting at this point so I’ll just stop. It’s just frustrating is all.",
     "I’ve genuinely never been a rock fan, but I was convinced to attend a Fall Out Boy concert with a group of friends and wow it was great. I’d never been to a concert before today and wow, the atmosphere and the people. So loud but so exciting. It probably would have helped if I knew their music but because I was invited quite last minute I barely had time to even look them up. There was one song though which I had heard before so I knew the chorus at least. Guess I should give the band a listen at some point, I guess rock isn’t too bad.",
     "Actually can’t believe my parents had a go at me for being ‘lazy’ when my brother does literally nothing around the house. Just because it’s exam season for him he gets a free pass. I do the dishes, I vacuum every inch of the house, take out the trash and replace the bin bags and when they tell me to put food into the dog’s food bowl, apparently telling them to “wait a minute” isn’t acceptable. Just be patient for goodness sake, I’m not even refusing. I still did it in the end anyway but still, it’s always me isn’t it?"
-];
+]; 
 
-//Load images
+//Load images and JSON
 loader
     .add("groundTex", "assets/ground.png")
     .add("rainbowTex", "assets/rainbow.png")
@@ -163,6 +164,8 @@ function setup(){
     groundSprite.anchor.set(0.5, 0.5);
     groundSprite.position.set(canvWidth * 0.5, canvHeight * 0.95);
     groundSprite.scale.set(0.9);
+    
+    //if no flower is planted, make the ground interactive and plant new flower when  clicked
     if(!flowerPlanted){
         groundSprite.interactive = true;
         groundSprite.on('pointerdown', function(e){
@@ -187,10 +190,12 @@ function setup(){
     
     //add cloud container to sprite container
     spriteContainer.addChild(cloudContainer);
+    
+    //set index of cloud container in sprite container to position it behind flower
     spriteContainer.setChildIndex(cloudContainer, 1);
     
     //create the first clouds
-    for(var i = 0; i < (cloudNum / 2); i++){
+    for(var i = 0; i < (cloudNum / 2); i++){ //create half the number of clouds wanted when start, and spawn the rest off screen
     clouds.push(new Cloud(cloudContainer, true));
     }
     
@@ -199,6 +204,7 @@ function setup(){
     infoPanelObj = new infoPanel();
     debugPanelObj = new debugPanel();
     
+    //create buttons at top of screen
     createButtons(btnContainer);
     
     //add keydown event listener for debug mode
@@ -211,11 +217,15 @@ function setup(){
 }
 
 function drawLoop(){
+    
     requestAnimationFrame(drawLoop);
+    
+    //for every cloud, run the move function
     for(var i = 0; i < clouds.length; i++){
         clouds[i].move(i);
     }
     
+    //if there is less clouds than the specified number, make more
     if(clouds.length < cloudNum){
         clouds.push(new Cloud(cloudContainer, false));
     }
@@ -223,7 +233,11 @@ function drawLoop(){
 }
 
 function parsePersonality(data){
+    
+    //holds the parsed JSON
     parsedData = JSON.parse(data);
+    
+    //if there is data, get the scores and store them
     if(parsedData.length > 0){
         lastEntry = parsedData[parsedData.length - 1];
         opennessScore = lastEntry.big5_openness;
@@ -232,6 +246,7 @@ function parsePersonality(data){
         agreeablenessScore = lastEntry.big5_agreeableness;
         neuroticismScore = lastEntry.big5_neuroticism;
     } else {
+        //if there is no data, use temp scores of 50.
         opennessScore = 50;
         conscientiousnessScore = 50;
         extraversionScore = 50;
@@ -242,6 +257,8 @@ function parsePersonality(data){
 
 function setupActiveFlower(data){
     activeFlowerJSON = JSON.parse(data);
+    
+    //if no flower is planted
     if(activeFlowerJSON.length == 0){
         flowerPlanted = false;
         noFlowerText = new text('No flower planted! Tap the ground to plant a seed!', style);
@@ -252,22 +269,25 @@ function setupActiveFlower(data){
         
     } else {
         flowerPlanted = true;
+        
+        //set up flower variables, to be passed when creating the flower
         let color = activeFlowerJSON[0].color;
         let petals = activeFlowerJSON[0].petals;
         let currentScore = activeFlowerJSON[0].currentFlowerScore;
+        
+        let oldScore = activeFlowerJSON[0].oldFlowerScore;
+        
+        //create new flower object using the values grabbed above
+        activeFlower = new Flower(color, petals, currentScore, oldScore, true, spriteContainer);
+        
+        //if the flower is fully grown
         if(currentScore >= 100){
             flowerComplete = true;
             flowerCompleteText = new text('Flower Complete! Tap to save and plant a new seed.', style);
-                flowerCompleteText.anchor.set(0.5);
-                flowerCompleteText.x = canvWidth / 2;
-                flowerCompleteText.y = canvHeight * 0.95;
-                spriteContainer.addChild(flowerCompleteText);
-        }
-        let oldScore = activeFlowerJSON[0].oldFlowerScore;
-        activeFlower = new Flower(color, petals, currentScore, oldScore, true, spriteContainer);
-        
-        //if the flower is fully grown, make it clickable
-        if(currentScore >= 100){
+            flowerCompleteText.anchor.set(0.5);
+            flowerCompleteText.x = canvWidth / 2;
+            flowerCompleteText.y = canvHeight * 0.95;
+            spriteContainer.addChild(flowerCompleteText);
             activeFlower.flowerSprite.interactive = true;
             activeFlower.flowerSprite.on('pointerdown', function(e){
                 createNewFlower();  
@@ -279,43 +299,37 @@ function setupActiveFlower(data){
 
 //function to create a new flower
 function createNewFlower(){
+    
+    //create new object to be passed to server
     let newFlower = {
-        color: petalColors[getRandomInt(0, petalColors.length - 1)],
-        petals: getRandomInt(0, 7),
+        color: petalColors[getRandomInt(0, petalColors.length - 1)], //get random int between 0 and the amount of colours.
+        petals: getRandomInt(0, 7), //random petal type
         currentFlowerScore: 0,
         oldFlowerScore: 0
     }
-    if(!flowerPlanted) spriteContainer.removeChild(noFlowerText);
+    if(!flowerPlanted) spriteContainer.removeChild(noFlowerText); //remove text if no flower was planted
     if(flowerComplete) {
-        spriteContainer.removeChild(flowerCompleteText);
+        spriteContainer.removeChild(flowerCompleteText); //remove text if flower was complete
         
-        spriteContainer.removeChild(activeFlower.flowerSprite);
+        spriteContainer.removeChild(activeFlower.flowerSprite); //remove old flower sprite
     }
-    //create temp seed planted flower
+    //create temp flower with score of 0
     activeFlower = new Flower(0, 0, 0, 0, true, spriteContainer);
     flowerPlanted = true;
     flowerComplete = false;
-    socket.emit('newFlower', newFlower);
+    socket.emit('newFlower', newFlower); //use sockets to send object to server to be pushed to db
 }
 
+//set up the number of clouds
 function setupCloudVariables(){
-    if(opennessScore == 100){
-        cloudNum = 0;
-    } else if (opennessScore >= 80){
-        cloudNum = 2;
-    } else if (opennessScore >= 60){
-        cloudNum = 4;
-    } else if (opennessScore >= 40){
-        cloudNum = 6;
-    } else if (opennessScore >= 20){
-        cloudNum = 8;
-    } else if (opennessScore < 20){
-        cloudNum = 10;
-    }
+    let invertScore = 100 - opennessScore;
+    cloudNum = Math.floor((invertScore * 10) / 100);
     
     
 }
 
+
+//functions to get random floats and ints
 function getRandomFloat(min, max){
     let range = max - min;
     let x = range * Math.random();
@@ -448,30 +462,38 @@ function createButtons(parent){
     let gardenBtnSprite = new Sprite(loader.resources.gardenBtn.texture);
     gardenBtnSprite.anchor.set(0.5);
     gardenBtnSprite.position.set(45, 45);
+    
     gardenBtnSprite.interactive = true;
     gardenBtnSprite.on('pointerdown', function(e){
+        //if any other panels are on screen, close them
         if(infoPanelObj.onScreen){
             infoPanelObj.hide();
         } else if(debugPanelObj.onScreen){
             debugPanelObj.hide();
         }
+        //show the panel
         gardenPanelObj.show();
     });
+    
     parent.addChild(gardenBtnSprite);
     
     //create info button
     let infoBtnSprite = new Sprite(loader.resources.infoBtn.texture);
     infoBtnSprite.anchor.set(0.5);
     infoBtnSprite.position.set(125, 45);
+    
     infoBtnSprite.interactive = true;
     infoBtnSprite.on('pointerdown', function(e){
+        //if any other panels are on screen, close them
         if(gardenPanelObj.onScreen){
             gardenPanelObj.hide();
         } else if(debugPanelObj.onScreen){
             debugPanelObj.hide();
         }
+        //show the panel
         infoPanelObj.show();
     });
+    
     parent.addChild(infoBtnSprite);    
     
     
@@ -492,10 +514,14 @@ function gardenPanel(){
     //populate panel with flowers using info from database
     //console.log(JSON.parse(loader.resources.previousFlowersJSON.data));
     let flowerData = JSON.parse(loader.resources.previousFlowersJSON.data);
+    
+    //create new container to hold flower sprites
     let oldFlowerCont = new PIXI.Container();
     oldFlowerCont.x = -170; 
     oldFlowerCont.y = -250;
     this.sprite.addChild(oldFlowerCont);
+    
+    //set up text style for use with timestamp
     var timeStampStyle = new PIXI.TextStyle({
         align: 'center',
         fill:0xFFFFFF,
@@ -508,9 +534,11 @@ function gardenPanel(){
         wordWrapWidth: 200
     });
     
-    var count = 0;
-    var page = 0;
+    var count = 0; //hold the flower number relative to the page, 0-9
+    var page = 0; //hold the page number, used for position calculation and on screen text
+    
     for(var i = flowerData.length - 1; i >= 0; i--){
+        //if the 10th flower made, reset the count and increment page count.
         if(count === 9){
             page++;
             this.pageCount++;
@@ -532,7 +560,7 @@ function gardenPanel(){
         
         
         let tempTime = flowerData[i].timestamp;
-        let timeArray = tempTime.split(' ');
+        let timeArray = tempTime.split(' '); //split the timestamp to just get date
         let timeStamp = new text(timeArray[0], timeStampStyle);
         timeStamp.anchor.set(0.5);
         timeStamp.y = 180;
@@ -540,6 +568,8 @@ function gardenPanel(){
         flower.addChild(timeStampBackSprite);
         flower.addChild(timeStamp);
         oldFlowerCont.addChild(flower);
+        
+        //position the flower using the page number and the page specific count. Next pages are just stored off the screen
         flower.x = ((count % 3) * 170) + page * 600 ;
         flower.y = Math.floor(count / 3) * 200;
         count ++;
@@ -572,7 +602,8 @@ function gardenPanel(){
     this.sprite.addChild(this.pageLeftSprite);
     this.pageLeftSprite.interactive = true;
     this.pageLeftSprite.on('pointerdown', function(e) {
-        if(gardenPanelObj.currentPage != 0){
+        if(gardenPanelObj.currentPage != 0){ //if not on the first page
+            //move the flower container to show the previous page, and decrement the current page number.
             oldFlowerCont.x += 600;
             gardenPanelObj.currentPage -= 1;
             gardenPanelObj.pageCountText.text = 'Page ' + (gardenPanelObj.currentPage + 1) + " of " + (gardenPanelObj.pageCount + 1);
@@ -587,7 +618,8 @@ function gardenPanel(){
     this.sprite.addChild(this.pageRightSprite);
     this.pageRightSprite.interactive = true;
     this.pageRightSprite.on('pointerdown', function(e) {
-        if(gardenPanelObj.currentPage < gardenPanelObj.pageCount){
+        if(gardenPanelObj.currentPage < gardenPanelObj.pageCount){ //if not on the last page
+            //move the flower container to show the next page, and increment the current page number.
             oldFlowerCont.x -= 600;
             gardenPanelObj.currentPage += 1;
             gardenPanelObj.pageCountText.text = 'Page ' + (gardenPanelObj.currentPage + 1) + " of " + (gardenPanelObj.pageCount + 1);
@@ -653,6 +685,8 @@ function infoPanel(){
             scoreText.scale.set(0.6);
             scoreText.position.set(48, 165 + (i * 32)); //165
             this.sprite.addChild(scoreText);
+        
+            //if the first value (agreeableness) set up interactivity to enable dubg mode after 10 clicks
             if(i == 0){
                 scoreText.interactive = true;
                 scoreText.on('pointerdown', function(e){

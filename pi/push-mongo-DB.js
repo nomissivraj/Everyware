@@ -81,7 +81,7 @@ exports.PushtoMongoGrowFlower = function(score){
                     currentFlowerScore: result[0].currentFlowerScore + score,
                     oldFlowerScore: result[0].currentFlowerScore
                 }
-                dbo.collection("ActiveFlower").replaceOne({ }, flowerData, {upsert: true}, (err, res) => { //create new flower data using passed in object
+                dbo.collection("ActiveFlower").replaceOne({ }, flowerData, {upsert: true}, (err, res) => { //push new flower data using passed in object to db
                     if (err) throw err;
                     db.close;
                 }); 
