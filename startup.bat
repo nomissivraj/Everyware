@@ -1,3 +1,3 @@
 start cmd.exe /c C:\nodeserver.bat
-timeout 5
+timeout 10
 start cmd.exe /c C:\chrome.bat
