@@ -42,7 +42,7 @@ exports.AnalysePersonality = function(entry, timeStamp) {
                 var name = profile.personality[i].trait_id; //store trait_id in name variable
                 var score = Math.round(profile.personality[i].percentile * 100); //store rounded percentage value in score variable
                 filteredProfile[name] = score; //add the key/value pair to the filtered profile object using the stored name and score
-                let tempScore = parseInt((score / 12.5) - 2);
+                let tempScore = parseInt((score / 8.33333) - 2);
                 flowerScore += tempScore;
             }
 

@@ -62,33 +62,42 @@ exports.PushtoMongoReplaceNewFlower = function(colName, data){
     });
 
 }
-
+var count = 0
 exports.PushtoMongoGrowFlower = function(score){
 
-    MongoClient.connect(url, (err, db) => {
-        if (err) throw err; //throw error if can't connect
-        
-        var dbo = db.db('dat602');
-        dbo.collection("ActiveFlower").find({}).toArray((err, result) => { //get active flower data
-            if (err) throw err;
-            if(result.length < 1) { //if it doesnt exist, return.
-                return;
-            } else {
-                //save old active flower data in object with updated score
-                var flowerData = {
-                    color: result[0].color,
-                    petals: result[0].petals,
-                    currentFlowerScore: result[0].currentFlowerScore + score,
-                    oldFlowerScore: result[0].currentFlowerScore
-                }
-                dbo.collection("ActiveFlower").replaceOne({ }, flowerData, {upsert: true}, (err, res) => { //push new flower data using passed in object to db
-                    if (err) throw err;
-                    db.close;
-                }); 
-            }
+    if (count == 0){ //if the first time running, save the score
+        tempScore = score;
+        count ++;
+    } else if (count == 1){
+        let finalScore = score + tempScore;
+        MongoClient.connect(url, (err, db) => {
+            if (err) throw err; //throw error if can't connect
             
+            var dbo = db.db('dat602');
+            dbo.collection("ActiveFlower").find({}).toArray((err, result) => { //get active flower data
+                if (err) throw err;
+                if(result.length < 1) { //if it doesnt exist, return.
+                    return;
+                } else {
+                    //save old active flower data in object with updated score
+                    var flowerData = {
+                        color: result[0].color,
+                        petals: result[0].petals,
+                        currentFlowerScore: result[0].currentFlowerScore + finalScore,
+                        oldFlowerScore: result[0].currentFlowerScore
+                    }
+                    dbo.collection("ActiveFlower").replaceOne({ }, flowerData, {upsert: true}, (err, res) => { //push new flower data using passed in object to db
+                        if (err) throw err;
+                        db.close;
+                    }); 
+                }
+                
+            });
         });
-    });
+        count = 0;
+    }
+
+
 
 }
 
