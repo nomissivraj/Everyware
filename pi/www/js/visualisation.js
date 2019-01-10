@@ -55,6 +55,9 @@ var cloudContainer = new PIXI.Container();
 //the garden panel to see previous flowers
 var gardenPanelObj;
 
+//bool to track whether pers data is empty
+var emptyData;
+
 //to track the DEBUG mode entry
 var debugCodeCount = 0;
 var debugCount = 0;
@@ -143,7 +146,8 @@ function setup(){
         wordWrapWidth: 440
     });
     
-    
+    emptyData = true;
+
     //parse the personality JSON data that's loaded in
     parsePersonality(loader.resources.persJSON.data);
     
@@ -240,11 +244,21 @@ function parsePersonality(data){
     //if there is data, get the scores and store them
     if(parsedData.length > 0){
         lastEntry = parsedData[parsedData.length - 1];
-        opennessScore = lastEntry.big5_openness;
-        conscientiousnessScore = lastEntry.big5_conscientiousness;
-        extraversionScore = lastEntry.big5_extraversion;
-        agreeablenessScore = lastEntry.big5_agreeableness;
-        neuroticismScore = lastEntry.big5_neuroticism;
+        if (lastEntry.big5_agreeableness === 0 && lastEntry.big5_conscientiousness === 0 && lastEntry.big5_extraversion === 0 && lastEntry.big5_neuroticism === 0 && lastEntry.big5_openness === 0){
+            agreeablenessScore = 50;
+            conscientiousnessScore = 50;
+            extraversionScore = 50;
+            neuroticismScore = 50;
+            opennessScore = 50;
+        } else {
+            emptyData = false;
+            opennessScore = lastEntry.big5_openness;
+            conscientiousnessScore = lastEntry.big5_conscientiousness;
+            extraversionScore = lastEntry.big5_extraversion;
+            agreeablenessScore = lastEntry.big5_agreeableness;
+            neuroticismScore = lastEntry.big5_neuroticism;
+        }
+
     } else {
         //if there is no data, use temp scores of 50.
         opennessScore = 50;
@@ -680,23 +694,25 @@ function infoPanel(){
     ];
     //create and position score text sprites;
     for(var i = 0; i < scoreArray.length; i++){
-            let scoreText = new text(scoreArray[i], this.scoreStyle);
-            scoreText.anchor.set(0.5);
-            scoreText.scale.set(0.6);
-            scoreText.position.set(48, 165 + (i * 32)); //165
-            this.sprite.addChild(scoreText);
-        
-            //if the first value (agreeableness) set up interactivity to enable dubg mode after 10 clicks
-            if(i == 0){
-                scoreText.interactive = true;
-                scoreText.on('pointerdown', function(e){
-                    debugCount++; 
-                    if(debugCount == 10){
-                        console.log('debug mode activated');
-                        debugMode(btnContainer);
-                    }
-                });
-            }
+        let scoreValue = "N/A";
+        if(!emptyData) scoreValue = scoreArray[i];
+        let scoreText = new text(scoreValue, this.scoreStyle);
+        scoreText.anchor.set(0.5);
+        scoreText.scale.set(0.6);
+        scoreText.position.set(48, 165 + (i * 32)); //165
+        this.sprite.addChild(scoreText);
+    
+        //if the first value (agreeableness) set up interactivity to enable dubg mode after 10 clicks
+        if(i == 0){
+            scoreText.interactive = true;
+            scoreText.on('pointerdown', function(e){
+                debugCount++; 
+                if(debugCount == 10){
+                    console.log('debug mode activated');
+                    debugMode(btnContainer);
+                }
+            });
+        }
             
     }
     
